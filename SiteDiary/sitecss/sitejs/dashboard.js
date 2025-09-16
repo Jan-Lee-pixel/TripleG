@@ -1,9 +1,6 @@
 // JavaScript for responsive enhancements and interactions
 document.addEventListener('DOMContentLoaded', function () {
-    // Mobile menu functionality
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const navLinks = document.querySelector('.nav-links');
-
+    // Custom scrollbar styles
     const style = document.createElement('style');
     style.textContent = `
 /* Webkit browsers (Chrome, Safari, newer versions of Opera) */
@@ -41,13 +38,6 @@ body:not(:hover)::-webkit-scrollbar-thumb {
 }
 `;
     document.head.appendChild(style);
-
-
-    if (mobileMenuBtn) {
-        mobileMenuBtn.addEventListener('click', function () {
-            navLinks.classList.toggle('active');
-        });
-    }
 
     // Make progress bars and milestones dynamic
     const projectCards = document.querySelectorAll('.project-card');

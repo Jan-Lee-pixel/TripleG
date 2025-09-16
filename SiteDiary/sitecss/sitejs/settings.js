@@ -32,9 +32,61 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // Email validation
+    const emailInput = document.getElementById('email');
+    const emailError = document.getElementById('emailError');
+    
+    if(emailInput && emailError) {
+        emailInput.addEventListener('input', function() {
+            validateEmail(this);
+        });
+        
+        emailInput.addEventListener('blur', function() {
+            validateEmail(this);
+        });
+    }
+    
+    function validateEmail(input) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if(!emailRegex.test(input.value)) {
+            input.setCustomValidity('Invalid email format');
+            emailError.style.display = 'block';
+        } else {
+            input.setCustomValidity('');
+            emailError.style.display = 'none';
+        }
+    }
+    
+    // Phone validation
+    const phoneInput = document.getElementById('phone');
+    const phoneError = document.getElementById('phoneError');
+    
+    if(phoneInput && phoneError) {
+        phoneInput.addEventListener('input', function() {
+            validatePhone(this);
+        });
+        
+        phoneInput.addEventListener('blur', function() {
+            validatePhone(this);
+        });
+    }
+    
+    function validatePhone(input) {
+        const phoneRegex = /^[\+]?[(]?[0-9]{1,3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+        if(!phoneRegex.test(input.value)) {
+            input.setCustomValidity('Invalid phone format');
+            phoneError.style.display = 'block';
+        } else {
+            input.setCustomValidity('');
+            phoneError.style.display = 'none';
+        }
+    }
+    
     // Password strength meter
     const passwordInput = document.getElementById('newPassword');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
     const strengthBar = document.getElementById('passwordStrength');
+    const passwordMatchError = document.getElementById('passwordMatchError');
     
     if(passwordInput) {
         passwordInput.addEventListener('input', function() {
@@ -56,11 +108,32 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 strengthBar.style.backgroundColor = '#4caf50';
             }
+            
+            // Check password match if confirm password has value
+            if(confirmPasswordInput && confirmPasswordInput.value) {
+                checkPasswordMatch();
+            }
         });
     }
     
-               // Profile image upload
-               const avatarUpload = document.getElementById('avatar-upload');
+    // Password match validation
+    if(confirmPasswordInput && passwordMatchError) {
+        confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+        confirmPasswordInput.addEventListener('blur', checkPasswordMatch);
+    }
+    
+    function checkPasswordMatch() {
+        if(passwordInput.value !== confirmPasswordInput.value) {
+            confirmPasswordInput.setCustomValidity('Passwords do not match');
+            passwordMatchError.style.display = 'block';
+        } else {
+            confirmPasswordInput.setCustomValidity('');
+            passwordMatchError.style.display = 'none';
+        }
+    }
+    
+    // Profile image upload
+    const avatarUpload = document.getElementById('avatar-upload');
     const profileImage = document.getElementById('profileImage');
     
     if(avatarUpload && profileImage) {
@@ -76,11 +149,31 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Form reset functionality
+    const resetButtons = document.querySelectorAll('.btn-secondary');
+    
+    resetButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Find the parent form
+            const form = this.closest('form');
+            
+            if(form) {
+                form.reset();
+            } else {
+                // If no form, just reload the section
+                location.reload();
+            }
+        });
+    });
+    
     // Success message handling
     const saveButtons = document.querySelectorAll('.btn-primary');
     
     saveButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function(e) {
+            // Prevent default form submission for demo
+            e.preventDefault();
+            
             // Find the parent section
             const section = this.closest('.settings-section');
             // Find the success message in this section
@@ -88,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if(successMessage) {
                 // Show success message
-                successMessage.style.display = 'flex';
+                successMessage.style.display = 'block';
                 
                 // Hide after 3 seconds
                 setTimeout(() => {
@@ -110,188 +203,73 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Data export functionality (for demonstration)
+    const exportButtons = document.querySelectorAll('.backup-btn-download');
+    
+    exportButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const exportType = this.textContent.trim() || 'Data';
+            const backupSuccess = document.getElementById('backupSuccess');
+            
+            if(backupSuccess) {
+                backupSuccess.innerHTML = `<i class="fas fa-check-circle"></i> ${exportType} export has been initiated successfully.`;
+                backupSuccess.style.display = 'block';
+                
+                setTimeout(() => {
+                    backupSuccess.style.display = 'none';
+                }, 3000);
+            }
+        });
+    });
+    
     // Set the first menu item as active by default
     if(menuItems.length > 0) {
         menuItems[0].click();
     }
-    const style = document.createElement('style');
-style.textContent = `
-/* Webkit browsers (Chrome, Safari, newer versions of Opera) */
-::-webkit-scrollbar {
-width: 5px;
-background-color: transparent;
-}
-
-::-webkit-scrollbar-track {
-background-color: transparent;
-border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb {
-background-color: rgba(255, 255, 255, 0);
-border-radius: 5px;
-border: 2px solid transparent;
-background-clip: content-box;
-transition: background-color 0.3s;
-}
-
-::-webkit-scrollbar-thumb:hover {
-background-color: rgba(255, 255, 255, 0);
-}
-
-/* For Firefox */
-* {
-scrollbar-width: thin;
-scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
-}
-
-/* Hide scrollbar when not scrolling (optional) */
-body:not(:hover)::-webkit-scrollbar-thumb {
-background-color: rgba(255, 255, 255, 0);
-}
-`;
-document.head.appendChild(style);
-
-
-// ===== SMOOTH SCROLLING CORE IMPLEMENTATION =====
-let isScrolling = false;
-let lastScrollTime = 0;
-const SCROLL_THROTTLE_TIME = 100;
-
-// Unified easing function
-function easeInOutCubic(t) {
-return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
-}
-
-function smoothScrollTo(targetPosition, duration = 10000) {
-if (isScrolling) return;
-isScrolling = true;
-
-const startPosition = window.pageYOffset;
-const distance = targetPosition - startPosition;
-const startTime = performance.now();
-
-function animate(currentTime) {
-const elapsed = currentTime - startTime;
-const progress = Math.min(elapsed / duration, 1);
-const easedProgress = easeInOutCubic(progress);
-
-window.scrollTo(0, startPosition + distance * easedProgress);
-
-if (progress < 1) {
-    requestAnimationFrame(animate);
-} else {
-    isScrolling = false;
-}
-}
-
-requestAnimationFrame(animate);
-}
-
-// ===== EVENT HANDLERS =====
-function handleWheel(e) {
-if (Date.now() - lastScrollTime < SCROLL_THROTTLE_TIME) return;
-lastScrollTime = Date.now();
-
-if (Math.abs(e.deltaY) < 20) return;
-
-e.preventDefault();
-
-const direction = Math.sign(e.deltaY);
-const pageHeight = window.innerHeight;
-const targetPosition = Math.max(0, 
-Math.min(document.documentElement.scrollHeight - pageHeight,
-window.pageYOffset + (direction * pageHeight))
-);
-
-smoothScrollTo(targetPosition, 800);
-}
-
-function handleKeyboard(e) {
-let targetPosition;
-const currentPosition = window.pageYOffset;
-const pageHeight = window.innerHeight;
-const docHeight = document.documentElement.scrollHeight;
-
-switch(e.key) {
-case 'ArrowDown':
-    targetPosition = currentPosition + pageHeight * 0.25;
-    break;
-case 'ArrowUp':
-    targetPosition = currentPosition - pageHeight * 0.25;
-    break;
-case 'PageDown':
-    targetPosition = currentPosition + pageHeight * 0.9;
-    break;
-case 'PageUp':
-    targetPosition = currentPosition - pageHeight * 0.9;
-    break;
-case 'Home':
-    targetPosition = 0;
-    break;
-case 'End':
-    targetPosition = docHeight - pageHeight;
-    break;
-default:
-    return;
-}
-
-e.preventDefault();
-targetPosition = Math.max(0, Math.min(docHeight - pageHeight, targetPosition));
-smoothScrollTo(targetPosition, 700);
-}
-
-// ===== ANCHOR LINK HANDLING =====
-function handleAnchorClick(e) {
-e.preventDefault();
-const targetId = this.hash;
-if (!targetId || targetId === '#') return;
-
-const targetElement = document.querySelector(targetId);
-if (!targetElement) return;
-
-const navbar = document.querySelector('.navbar');
-const navbarHeight = navbar ? navbar.offsetHeight : 0;
-const targetPosition = targetElement.getBoundingClientRect().top + 
-                 window.pageYOffset - 
-                 (navbarHeight + 20); // 20px buffer
-
-smoothScrollTo(targetPosition, 1000);
-
-// Update URL without jumping
-history.replaceState(null, null, targetId);
-}
-
-// ===== INITIALIZATION =====
-function initSmoothScroll() {
-// Event Listeners
-window.addEventListener('wheel', handleWheel, { passive: false });
-window.addEventListener('keydown', handleKeyboard);
-window.addEventListener('scrollend', () => isScrolling = false);
-
-// Anchor Links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-anchor.addEventListener('click', handleAnchorClick);
-});
-
-// Mobile Menu Integration
-const mobileMenu = document.getElementById('navLinks');
-if (mobileMenu) {
-document.addEventListener('click', (e) => {
-    if (mobileMenu.classList.contains('active') && 
-        !e.target.closest('.navbar')) {
-        mobileMenu.classList.remove('active');
-    }
-});
-}
-}
-
-document.addEventListener("DOMContentLoaded", initSmoothScroll);
     
+    // Custom scrollbar style (preserved from original)
+    const style = document.createElement('style');
+    style.textContent = `
+    /* Webkit browsers (Chrome, Safari, newer versions of Opera) */
+    ::-webkit-scrollbar {
+        width: 5px;
+        background-color: transparent;
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: transparent;
+        border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0);
+        border-radius: 5px;
+        border: 2px solid transparent;
+        background-clip: content-box;
+        transition: background-color 0.3s;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(255, 255, 255, 0);
+    }
+
+    /* For Firefox */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    }
+
+    /* Hide scrollbar when not scrolling (optional) */
+    body:not(:hover)::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0);
+    }
+    `;
+    document.head.appendChild(style);
+    
+    // Mobile menu functionality (again, as it appeared twice in original code)
     if(mobileMenuBtn) {
         mobileMenuBtn.addEventListener('click', function() {
             navLinks.classList.toggle('active');
         });
     }
-    
-});
+}); 

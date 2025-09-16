@@ -29,8 +29,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Initialize Charts
-    initializeCharts();
+    // Initialize Charts with delay to ensure Chart.js is loaded
+    setTimeout(() => {
+        if (typeof Chart !== 'undefined') {
+            initializeCharts();
+            console.log('Charts initialized successfully');
+        } else {
+            console.error('Chart.js library not loaded');
+        }
+    }, 500);
 
     // Add scrollbar styles
     const style = document.createElement('style');
@@ -73,9 +80,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeCharts() {
+    console.log('Initializing charts...');
+    
     // Labor Hours Distribution Chart
     const laborCtx = document.getElementById('laborChart')?.getContext('2d');
     if (laborCtx) {
+        console.log('Creating labor chart');
         new Chart(laborCtx, {
             type: 'bar',
             data: {
