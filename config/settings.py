@@ -85,8 +85,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'tripleg_db',
         'USER': 'postgres',
-        'PASSWORD': 'Ernesto!@#',
-        'HOST': 'localhost',
+        'PASSWORD': '',
+        'HOST': 'admindb123',
         'PORT': '5432',
     }
 }
