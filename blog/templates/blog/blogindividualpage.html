@@ -6,24 +6,24 @@
     <title>Sustainable Construction: Building for a Better Future | Triple G BuildHub</title>
     <meta name="description" content="Discover how sustainable construction practices are reshaping the industry, reducing environmental impact, and creating more efficient, healthier buildings.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/home.css">
-    <link rel="stylesheet" href="css/blogindividual.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/blogindividual.css' %}">
 </head>
 <body>
     <nav class="navbar">
         <div class="logo-container">
-          <img class="logo" src="css/images/logostick.png" alt="Logo">
+          <img class="logo" src="{% static 'images/logostick.png' %}" alt="Logo">
           <div class="logo1">TRIPLE<a>G.</a></div>
         </div>
         <ul class="nav-links" id="navLinks">
-          <li><a href="home.html">Home</a></li>
-          <li><a href="projects.html">Projects</a></li>
-          <li><a href="bloglist.html">Blog</a></li>
-          <li><a href="contacts.html">Contact</a></li>
-          <li><a href="aboutus.html">About Us</a></li>
+          <li><a href="{% url 'core:index' %}">Home</a></li>
+          <li><a href="{% url 'blog_list' %}">Blog</a></li>
+          <li><a href="{% url 'core:contact' %}">Contact</a></li>
+          <li><a href="{% url 'core:about' %}">About Us</a></li>
           <li><a href="../SiteDiary/dashboard.html">ArchitectDiary</a></li>
-          <li><a href="usersettings.html" class="active">Settings</a></li>
-    
+          <li><a href="{% url 'core:usersettings' %}" class="active">Settings</a></li>
+          <li><a href="{% url 'core:login' %}">Log in</a></li>
         </ul>
         <button class="mobile-menu-btn" id="mobileMenuBtn">
           <i class="fas fa-bars"></i>
@@ -44,7 +44,7 @@
                         <h1 class="post-title">Sustainable Construction: Building for a Better Future</h1>
                         <div class="post-meta">
                             <div class="author-info">
-                                <img src="css/images/arkitel.PNG" alt="Michael Richards" class="author-avatar">
+                                <img src="{% static 'images/arkitel.jpg' %}" alt="Michael Richards" class="author-avatar">
                                 <span class="author-name">Ar.Kristelle gelasque</span>
                             </div>
                             <div class="post-details">
@@ -57,7 +57,7 @@
 
                     <!-- Featured Image -->
                     <div class="post-featured-image">
-                        <img src="css/images/kristelle.jpg" alt="Sustainable Construction Practices">
+                        <img src="{% static 'images/kristelle.jpg' %}" alt="Sustainable Construction Practices">
                     </div>
 
                     <!-- Table of Contents -->
@@ -111,15 +111,15 @@
                             </ul>
                             
                             <div class="post-image-container">
-                                <img src="css/images/image1.jpg" alt="Chart showing benefits of sustainable construction">
+                                <img src="{% static 'images/image1.jpg' %}" alt="Chart showing benefits of sustainable construction">
                                 <span class="image-caption">Figure 1: Comparative benefits of sustainable vs. conventional buildings</span>
                             </div>
                             <div class="post-image-container">
-                                <img src="css/images/image1.jpg" alt="Chart showing benefits of sustainable construction">
+                                <img src="{% static 'images/image1.jpg' %}" alt="Chart showing benefits of sustainable construction">
                                 <span class="image-caption">Figure 1: Comparative benefits of sustainable vs. conventional buildings</span>
                             </div>
                             <div class="post-image-container">
-                                <img src="css/images/image1.jpg" alt="Chart showing benefits of sustainable construction">
+                                <img src="{% static 'images/image1.jpg' %}" alt="Chart showing benefits of sustainable construction">
                                 <span class="image-caption">Figure 1: Comparative benefits of sustainable vs. conventional buildings</span>
                             </div>
                             
@@ -148,7 +148,7 @@
 
                     <!-- Author Bio -->
                     <div class="author-bio">
-                        <img src="css/images/arkitel.PNG" alt="Michael Richards" class="author-avatar">
+                        <img src="{% static 'images/arkitel.PNG' %}" alt="Michael Richards" class="author-avatar">
                         <div class="author-details">
                             <h3>About the Author</h3>
                             <h4>Ar.Kristelle gelasque</h4>
@@ -178,7 +178,7 @@
                         <div class="related-posts-grid">
                             <article class="related-post-card">
                                 <div class="related-post-image">
-                                    <img src="css/images/image3.jpg" alt="Green Building Materials">
+                                    <img src="{% static 'images/image3.jpg' %}" alt="Green Building Materials">
                                 </div>
                                 <div class="related-post-content">
                                     <h4><a href="#">Innovative Green Materials Transforming Construction</a></h4>
@@ -187,7 +187,7 @@
                             </article>
                             <article class="related-post-card">
                                 <div class="related-post-image">
-                                    <img src="css/images/image5.jpg" alt="Solar Integration">
+                                    <img src="{% static 'images/image5.jpg' %}" alt="Solar Integration">
                                 </div>
                                 <div class="related-post-content">
                                     <h4><a href="#">Integrating Solar Power into Modern Building Design</a></h4>
@@ -196,7 +196,7 @@
                             </article>
                             <article class="related-post-card">
                                 <div class="related-post-image">
-                                    <img src="css/images/image7.jpg" alt="Zero Energy Buildings">
+                                    <img src="{% static 'images/image7.jpg' %}" alt="Zero Energy Buildings">
                                 </div>
                                 <div class="related-post-content">
                                     <h4><a href="#">The Rise of Zero-Energy Buildings: Case Studies</a></h4>
@@ -211,7 +211,7 @@
                         <h3>Comments (12)</h3>                   
                             <div class="comment-form"> 
                                 <h4>Leave a Comment</h4>
-                                                        <div class="client-comment-info">                                                                <div class="client-avatar">                                                                        <img src="css/images/engi.jpg" alt="Your Profile" id="clientAvatar">                                                                </div>                                                                <div class="client-info">                                                                        <span class="client-name" id="clientName">Share your thoughts</span>                                                                </div>                                                        </div>                              
+                                                        <div class="client-comment-info">                                                                <div class="client-avatar">                                                                        <img src="{% static 'images/engi.jpg' %}" alt="Your Profile" id="clientAvatar">                                                                </div>                                                                <div class="client-info">                                                                        <span class="client-name" id="clientName">Share your thoughts</span>                                                                </div>                                                        </div>                              
                             <form id="blogCommentForm">                                
                                 <div class="form-group">                                    
                                     <label for="commentContent">Your Comment</label>                                    
@@ -227,7 +227,7 @@
                             <!-- Comment -->
                             <div class="comment">
                                 <div class="comment-avatar">
-                                    <img src="css/images/engi.jpg" alt="User Avatar">
+                                    <img src="{% static 'images/engi.jpg' %}" alt="User Avatar">
                                 </div>
                                 <div class="comment-content">
                                     <div class="comment-header">
@@ -244,7 +244,7 @@
                             <!-- Nested Comment -->
                             <div class="comment nested-comment">
                                 <div class="comment-avatar">
-                                    <img src="css/images/kristelle.jpg" alt="Author Avatar">
+                                    <img src="{% static 'images/kristelle.jpg' %}" alt="Author Avatar">
                                 </div>
                                 <div class="comment-content">
                                     <div class="comment-header">
@@ -294,7 +294,7 @@
                         <div class="popular-posts">
                             <article class="popular-post">
                                 <div class="popular-post-image">
-                                    <img src="css/images/image9.jpg" alt="Project Management">
+                                    <img src="{% static 'images/image9.jpg' %}" alt="Project Management">
                                 </div>
                                 <div class="popular-post-content">
                                     <h4><a href="#">5 Project Management Tools That Actually Work</a></h4>
@@ -352,13 +352,13 @@
            </a>
         </div>
         <div class="footer-logo">
-          <img src="css/images/tripleGlogo.jpg" alt="Logo" class="logo-img">
+          <img src="{% static 'images/tripleGlogo.jpg' %}" alt="Logo" class="logo-img">
         </div>
       </div>
     </div>
   </footer>
 
-    <script src="./js/blogindividual.js"></script>
+    <script src="{% static 'js/blogindividual.js' %}"></script>
 
 </body>
 </html>

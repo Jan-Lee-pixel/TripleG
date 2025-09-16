@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
     path('accounts/', include('accounts.urls')),
-    path('portfolio/', include('portfolio.urls')),
+    path('portfolio/', include(('portfolio.urls', 'portfolio'), namespace='portfolio')),
     path('diary/', include('site_diary.urls')),
     path('blog/', include('blog.urls')),
     path('chat/', include('chatbot.urls')),

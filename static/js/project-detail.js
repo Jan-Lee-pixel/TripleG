@@ -176,7 +176,7 @@ function initVideoBackground() {
     if (!video || !videoBackground) return;
     
     // Set video source directly in JavaScript
-    video.src = './css/videos/Sksca9hO.mp4';
+    video.src = '/static/videos/Sksca9hO.mp4';
     
     // Check if browser can play video
     const canPlayVideo = video.canPlayType && (
@@ -209,7 +209,7 @@ function initVideoBackground() {
         
         // Add fallback background image
         if (videoBackground) {
-            videoBackground.style.backgroundImage = 'url("../css/images/image1.jpg")';
+            videoBackground.style.backgroundImage = 'url("/static/images/image1.jpg")';
             videoBackground.style.backgroundSize = 'cover';
             videoBackground.style.backgroundPosition = 'center';
         }

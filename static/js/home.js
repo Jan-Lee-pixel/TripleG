@@ -1,3 +1,5 @@
+
+
 document.addEventListener("DOMContentLoaded", function () {
     const recentProjects = document.getElementById("recentProjects");
     const prevBtn = document.getElementById("prevBtn");
@@ -104,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
     // Function to change main image and background
     window.changeMainImage = function (imageSrc) {
-      let imagePath = imageSrc.includes("css/images") ? imageSrc : "./css/images/" + imageSrc;
+      let imagePath = imageSrc.includes("/images") ? imageSrc : "./images/" + imageSrc;
   
       mainImage.style.transition = "opacity 0.5s ease, transform 0.5s ease";
       mainImage.style.opacity = "0";
@@ -250,5 +252,9 @@ document.addEventListener("DOMContentLoaded", function () {
         requestAnimationFrame(smoothPageScroll);
       }
     });
+    
   });
+  
+
+
   

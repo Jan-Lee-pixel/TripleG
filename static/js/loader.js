@@ -14,21 +14,13 @@ class TripleGLoader {
         this.initiated = false;
         this.lottieInstance = null;
         this.lottieContainer = null;
+        // Lottie removed: fallback to spinner
         this.loadingMessage = null;
         this.pageLoaded = false;
-        this.lottieLoaded = false;
-        this.fallbackUsed = false;
+        this.lottieLoaded = true;
+        this.fallbackUsed = true;
         this.retryCount = 0;
         this.maxRetries = 2;
-        this.animationPaths = [
-            // Determine paths based on current location
-            window.location.pathname.includes('SiteDiary/') ? 
-                '../json/Color-scheme-remix.json' : './json/Color-scheme-remix.json', // Primary path
-            '/json/Color-scheme-remix.json',  // Absolute path as fallback
-            window.location.pathname.includes('SiteDiary/') ? 
-                '../json/Color-scheme-[remix].json' : './json/Color-scheme-[remix].json', // Try with brackets
-            '/json/Color-scheme-[remix].json' // Absolute path with brackets
-        ];
     }
 
     /**
@@ -43,7 +35,8 @@ class TripleGLoader {
         this.setupEventListeners();
         
         // Start both Lottie and progress systems in parallel
-        this.loadLottieAnimation();
+        // Lottie removed
+        this.useFallbackAnimation();
         this.startProgressSystem();
         
         // Safety timeout in case something hangs
@@ -77,20 +70,19 @@ class TripleGLoader {
         const logoImg = document.createElement('img');
         logoImg.className = 'tripleG-logo';
         
-        // Determine correct path based on current URL
-        const isSubdirectory = window.location.pathname.includes('SiteDiary/');
-        logoImg.src = isSubdirectory ? '../css/images/logostick.png' : './css/images/logostick.png';
+        logoImg.src = '/static/images/logostick.png';
         
         logoImg.alt = 'Triple G Logo';
         logoImg.onerror = () => {
             // Try alternative paths if the first one fails
-            if (logoImg.src.includes('./css/')) {
-                logoImg.src = '../css/images/logostick.png';
+            if (logoImg.src.includes('/static/images/')) {
+                logoImg.src = '/static/images/logostick.png';
+                logoImg.src = '/static/images/logostick.png';
             } else if (logoImg.src.includes('../css/')) {
-                logoImg.src = './css/images/logostick.png';
+                logoImg.src = '/static/images/logostick.png';
             } else {
                 // Final fallback
-                logoImg.src = '/css/images/logostick.png';
+                logoImg.src = '/static/images/logostick.png';
             }
         };
         logoContainer.appendChild(logoImg);
@@ -152,104 +144,14 @@ class TripleGLoader {
     /**
      * Load Lottie animation with fallback handling
      */
-    async loadLottieAnimation() {
-        // Check if Lottie is already loaded
-        if (window.lottie) {
-            this.initLottieAnimation();
-            return;
-        }
-
-        try {
-            await this.loadLottieLibrary();
-            this.initLottieAnimation();
-        } catch (error) {
-            console.error('Lottie failed to load:', error);
-            this.useFallbackAnimation();
-        }
-    }
 
     /**
      * Load Lottie library
      */
-    loadLottieLibrary() {
-        return new Promise((resolve, reject) => {
-            if (window.lottie) {
-                resolve();
-                return;
-            }
-
-            const script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.10.2/lottie.min.js';
-            script.async = true;
-            
-            script.onload = () => {
-                console.log('Lottie loaded successfully');
-                resolve();
-            };
-            
-            script.onerror = () => {
-                console.error('Lottie script failed to load');
-                reject(new Error('Lottie script load failed'));
-            };
-            
-            document.head.appendChild(script);
-            
-            // Timeout fallback
-            setTimeout(() => {
-                if (!window.lottie) {
-                    reject(new Error('Lottie load timeout'));
-                }
-            }, 3000);
-        });
-    }
 
     /**
      * Initialize Lottie animation with retry logic
      */
-    initLottieAnimation(retryIndex = 0) {
-        if (!window.lottie || !this.lottieContainer) {
-            console.warn('Lottie not available for initialization');
-            this.useFallbackAnimation();
-            return;
-        }
-
-        if (retryIndex >= this.animationPaths.length) {
-            console.warn('All animation paths failed - using fallback');
-            this.useFallbackAnimation();
-            return;
-        }
-
-        try {
-            this.lottieInstance = lottie.loadAnimation({
-                container: this.lottieContainer,
-                renderer: 'svg',
-                loop: true,
-                autoplay: true,
-                path: this.animationPaths[retryIndex],
-                rendererSettings: {
-                    progressiveLoad: true,
-                    preserveAspectRatio: 'xMidYMid meet'
-                }
-            });
-
-            this.lottieInstance.addEventListener('data_ready', () => {
-                console.log('Lottie animation loaded successfully');
-                this.lottieLoaded = true;
-                this.updateLoadingMessage('Almost there...');
-                this.checkCompletion();
-            });
-
-            this.lottieInstance.addEventListener('data_failed', () => {
-                console.warn(`Lottie load failed for path: ${this.animationPaths[retryIndex]}`);
-                this.lottieInstance.destroy();
-                this.initLottieAnimation(retryIndex + 1);
-            });
-
-        } catch (error) {
-            console.error('Lottie initialization error:', error);
-            this.initLottieAnimation(retryIndex + 1);
-        }
-    }
 
     /**
      * Fallback animation when Lottie fails

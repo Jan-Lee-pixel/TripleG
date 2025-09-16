@@ -5,25 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Industry Insights | Triple G BuildHub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/home.css">
-    <link rel="stylesheet" href="css/bloglist.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bloglist.css' %}">
 </head>
 <body>
    <!-- Navigation -->
   <nav class="navbar">
     <div class="logo-container">
-      <img class="logo" src="css/images/logostick.png" alt="Logo">
-      <img class="logo" src="css/images/logostick.png" alt="Logo">
+      <img class="logo" src="{% static 'images/logostick.png' %}" alt="Logo">
       <div class="logo1">TRIPLE<a>G.</a></div>
     </div>
     <ul class="nav-links" id="navLinks">
-      <li><a href="home.html">Home</a></li>
-      <li><a href="projects.html">Projects</a></li>
-      <li><a href="bloglist.html" class="active">Blog</a></li>
-      <li><a href="contacts.html">Contact</a></li>
-      <li><a href="aboutus.html">About Us</a></li>
-      <li><a href="../SiteDiary/dashboard.html">ArchitectDiary</a></li>
-      <li><a href="usersettings.html" class="active">Settings</a></li>
+      <li><a href="{% url 'core:index' %}">Home</a></li>
+<li><a href="{% url 'blog_list' %}" class="active">Blog</a></li>
+<li><a href="{% url 'core:contact' %}">Contact</a></li>
+<li><a href="{% url 'core:about' %}">About Us</a></li>
+<li><a href="../SiteDiary/dashboard.html">ArchitectDiary</a></li>
+<li><a href="{% url 'core:usersettings' %}" class="active">Settings</a></li>
+<li><a href="{% url 'core:login' %}">Log in</a></li>
     </ul>
     <button class="mobile-menu-btn" id="mobileMenuBtn">
       <i class="fas fa-bars"></i>
@@ -36,7 +36,7 @@
         <div class="video-background">
             <video autoplay muted loop playsinline id="header-bg-video">
                 <!-- Video files will be provided by the company -->
-                <source src="css/videos/Sksca9hO.mp4" type="video/mp4">
+                <source src="{% static 'videos/Sksca9hO.mp4' %}" type="video/mp4">
                 <!-- Fallback for browsers that don't support video tag -->
                 Your browser does not support the video tag.
             </video>
@@ -60,7 +60,7 @@
                         <h2 class="section-title">Featured Article</h2>
                         <div class="featured-post-card">
                             <div class="featured-image">
-                                <img src="css/images/image6.jpg" alt="Sustainable Construction Practices">
+                                <img src="{% static 'images/image6.jpg' %}" alt="Sustainable Construction Practices">
                                 <div class="category-badge">Sustainability</div>
                             </div>
                             <div class="featured-content">
@@ -71,7 +71,7 @@
                                     <span class="read-time"><i class="fas fa-clock"></i> 8 min read</span>
                                 </div>
                                 <p>Discover how sustainable construction practices are reshaping the industry, reducing environmental impact, and creating more efficient, healthier buildings for generations to come.</p>
-                                <a href="blogindividualpage.html" class="btn btn-secondary">Read Article <i class="fas fa-arrow-right"></i></a>
+                                <a href="{% url 'blog_individual' blog_id=1 %}" class="btn btn-secondary">Read Article <i class="fas fa-arrow-right"></i></a>
                             </div>
                         </div>
                     </section>
@@ -100,102 +100,102 @@
                         <!-- Post 1 -->
                         <article class="blog-card" data-category="industry-trends">
                             <div class="blog-card-image">
-                                <img src="css/images/image1.jpg" alt="Modular Construction">
+                                <img src="{% static 'images/image1.jpg' %}" alt="Modular Construction">
                                 <div class="category-badge">Industry Trends</div>
                             </div>
                             <div class="blog-card-content">
-                                <h3><a href="blogindividualpage.html">The Rise of Modular Construction in Urban Development</a></h3>
+                                <h3><a href="{% url 'blog_individual' blog_id=1 %}">The Rise of Modular Construction in Urban Development</a></h3>
                                 <div class="post-meta">
                                     <span class="author"><i class="fas fa-user"></i> Sarah Johnson</span>
                                     <span class="date"><i class="fas fa-calendar"></i> March 10, 2025</span>
                                 </div>
                                 <p>How modular construction is transforming urban development with faster build times, reduced costs, and improved quality control.</p>
-                                <a href="blogindividualpage.html" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                                <a href="{% url 'blog_individual' blog_id=1 %}" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
                             </div>
                         </article>
 
                         <!-- Post 2 -->
                         <article class="blog-card" data-category="expert-advice">
                             <div class="blog-card-image">
-                                <img src="css/images/image2.jpeg" alt="Project Management">
+                                <img src="{% static 'images/image2.jpeg' %}" alt="Project Management">
                                 <div class="category-badge">Expert Advice</div>
                             </div>
                             <div class="blog-card-content">
-                                <h3><a href="blogindividualpage.html">5 Project Management Tools Every Construction Manager Needs</a></h3>
+                                <h3><a href="{% url 'blog_individual' blog_id=1 %}">5 Project Management Tools Every Construction Manager Needs</a></h3>
                                 <div class="post-meta">
                                     <span class="author"><i class="fas fa-user"></i> Robert Chen</span>
                                     <span class="date"><i class="fas fa-calendar"></i> March 5, 2025</span>
                                 </div>
                                 <p>Essential project management tools and software that streamline workflows, improve communication, and increase efficiency on construction projects.</p>
-                                <a href="blogindividualpage.html" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                                <a href="{% url 'blog_individual' blog_id=1 %}" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
                             </div>
                         </article>
 
                         <!-- Post 3 -->
                         <article class="blog-card" data-category="sustainability">
                             <div class="blog-card-image">
-                                <img src="css/images/image3.jpg" alt="Green Building Materials">
+                                <img src="{% static 'images/image3.jpg' %}" alt="Green Building Materials">
                                 <div class="category-badge">Sustainability</div>
                             </div>
                             <div class="blog-card-content">
-                                <h3><a href="blogindividualpage.html">Innovative Green Materials Transforming Construction</a></h3>
+                                <h3><a href="{% url 'blog_individual' blog_id=1 %}">Innovative Green Materials Transforming Construction</a></h3>
                                 <div class="post-meta">
                                     <span class="author"><i class="fas fa-user"></i> Emily Zhang</span>
                                     <span class="date"><i class="fas fa-calendar"></i> February 28, 2025</span>
                                 </div>
                                 <p>Exploring cutting-edge sustainable materials that reduce carbon footprints while maintaining structural integrity and design aesthetics.</p>
-                                <a href="blogindividualpage.html" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                                <a href="{% url 'blog_individual' blog_id=1 %}" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
                             </div>
                         </article>
 
                         <!-- Post 4 -->
                         <article class="blog-card" data-category="innovation">
                             <div class="blog-card-image">
-                                <img src="css/images/image4.jpg" alt="Construction Technology">
+                                <img src="{% static 'images/image4.jpg' %}" alt="Construction Technology">
                                 <div class="category-badge">Innovation</div>
                             </div>
                             <div class="blog-card-content">
-                                <h3><a href="blogindividualpage.html">How AI and Machine Learning are Revolutionizing Construction</a></h3>
+                                <h3><a href="{% url 'blog_individual' blog_id=1 %}">How AI and Machine Learning are Revolutionizing Construction</a></h3>
                                 <div class="post-meta">
                                     <span class="author"><i class="fas fa-user"></i> David Williams</span>
                                     <span class="date"><i class="fas fa-calendar"></i> February 20, 2025</span>
                                 </div>
                                 <p>Artificial intelligence and machine learning applications changing how we design, build, and manage construction projects.</p>
-                                <a href="blogindividualpage.html" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                                <a href="{% url 'blog_individual' blog_id=1 %}" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
                             </div>
                         </article>
 
                         <!-- Post 5 -->
                         <article class="blog-card" data-category="case-studies">
                             <div class="blog-card-image">
-                                <img src="css/images/image5.jpg" alt="Urban Renovation Project">
+                                <img src="{% static 'images/image5.jpg' %}" alt="Urban Renovation Project">
                                 <div class="category-badge">Case Studies</div>
                             </div>
                             <div class="blog-card-content">
-                                <h3><a href="blogindividualpage.html">Urban Renewal: The Transformation of Downtown Riverside</a></h3>
+                                <h3><a href="{% url 'blog_individual' blog_id=1 %}">Urban Renewal: The Transformation of Downtown Riverside</a></h3>
                                 <div class="post-meta">
                                     <span class="author"><i class="fas fa-user"></i> Jessica Martinez</span>
                                     <span class="date"><i class="fas fa-calendar"></i> February 15, 2025</span>
                                 </div>
                                 <p>A case study of how strategic construction and design revitalized a struggling downtown district into a thriving community hub.</p>
-                                <a href="blogindividualpage.html" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                                <a href="{% url 'blog_individual' blog_id=1 %}" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
                             </div>
                         </article>
 
                         <!-- Post 6 -->
                         <article class="blog-card" data-category="expert-advice">
                             <div class="blog-card-image">
-                                <img src="css/images/image7.jpg" alt="Building Codes">
+                                <img src="{% static 'images/image7.jpg' %}" alt="Building Codes">
                                 <div class="category-badge">Expert Advice</div>
                             </div>
                             <div class="blog-card-content">
-                                <h3><a href="blogindividualpage.html">Navigating New Building Codes: What Contractors Need to Know</a></h3>
+                                <h3><a href="{% url 'blog_individual' blog_id=1 %}">Navigating New Building Codes: What Contractors Need to Know</a></h3>
                                 <div class="post-meta">
                                     <span class="author"><i class="fas fa-user"></i> Thomas Anderson</span>
                                     <span class="date"><i class="fas fa-calendar"></i> February 10, 2025</span>
                                 </div>
                                 <p>Expert guidance on understanding and implementing the latest building code updates to ensure compliance and safety.</p>
-                                <a href="blogindividualpage.html" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                                <a href="{% url 'blog_individual' blog_id=1 %}" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
                             </div>
                         </article>
                     </section>
@@ -221,28 +221,28 @@
                         <ul class="popular-posts-list">
                             <li>
                                 <div class="post-thumbnail">
-                                    <img src="css/images/image8.jpg" alt="Popular Post">
+                                    <img src="{% static 'images/image8.jpg' %}" alt="Popular Post">
                                 </div>
                                 <div class="post-info">
-                                    <h4><a href="blogindividualpage.html">Construction Safety: Best Practices for 2025</a></h4>
+                                    <h4><a href="{% url 'blog_individual' blog_id=1 %}">Construction Safety: Best Practices for 2025</a></h4>
                                     <span class="post-date">March 8, 2025</span>
                                 </div>
                             </li>
                             <li>
                                 <div class="post-thumbnail">
-                                    <img src="css/images/image9.jpg" alt="Popular Post">
+                                    <img src="{% static 'images/image9.jpg' %}" alt="Popular Post">
                                 </div>
                                 <div class="post-info">
-                                    <h4><a href="blogindividualpage.html">Prefabrication: The Future of Commercial Construction</a></h4>
+                                    <h4><a href="{% url 'blog_individual' blog_id=1 %}">Prefabrication: The Future of Commercial Construction</a></h4>
                                     <span class="post-date">February 25, 2025</span>
                                 </div>
                             </li>
                             <li>
                                 <div class="post-thumbnail">
-                                    <img src="css/images/image10.jpg" alt="Popular Post">
+                                    <img src="{% static 'images/image10.jpg' %}" alt="Popular Post">
                                 </div>
                                 <div class="post-info">
-                                    <h4><a href="blogindividualpage.html">Designing Spaces for Mental Wellbeing</a></h4>
+                                    <h4><a href="{% url 'blog_individual' blog_id=1 %}">Designing Spaces for Mental Wellbeing</a></h4>
                                     <span class="post-date">February 12, 2025</span>
                                 </div>
                             </li>
@@ -330,13 +330,14 @@
            </a>
         </div>
         <div class="footer-logo">
-          <img src="css/images/tripleGlogo.jpg" alt="Logo" class="logo-img">
+          <img src="{% static 'images/kristelle.jpg' %}" alt="Logo" class="logo-img">
         </div>
       </div>
     </div>
       </footer>
 
-    <script src="./js/main.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/bloglist.js' %}"></script>
     <script src="./js/bloglist.js"></script>
 </body>
 </html>

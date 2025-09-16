@@ -1,5 +1,5 @@
 
-{% extends 'core/layout.html' %}
+{% extends 'layout.html' %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -75,7 +75,7 @@
         <div class="team-grid">
           <div class="team-member">
             <div class="member-image">
-              <img src="{% static 'css/images/arkiii.jpg' %}" alt="Team Member">
+              <img src="{% static '/images/arkiii.jpg' %}" alt="Team Member">
             </div>
             <div class="member-info">
               <h3>Jane Smith</h3>
@@ -101,7 +101,7 @@
           </div>
           <div class="team-member">
             <div class="member-image">
-              <img src="{% static 'css/images/engi.jpg' %}" alt="Team Member">
+              <img src="{% static '/images/engi.jpg' %}" alt="Team Member">
             </div>
             <div class="member-info">
               <h3>Sarah Williams</h3>
@@ -139,7 +139,7 @@
         "We don't just build structures; we create experiences, memories, and lasting impressions through our designs. Our goal is to transform the way people interact with their environment."
       </div>
       <p>Over the years, we have completed numerous projects across various sectors, from residential homes to commercial complexes, each bearing the distinctive Triple G mark of quality and innovation. Our journey has been one of continuous growth, learning, and adaptation to the ever-evolving needs of our clients and the industry.</p>
-      <a href="projects.html" class="btn-primary" data-color="#FF7120"><span>View Our Projects</span></a>
+      <a href="{% url 'core:index' %}" class="btn-primary" data-color="#FF7120"><span>View Our Projects</span></a>
     </div>
   </section>
 
@@ -219,18 +219,27 @@
 
  
 
-      mobileMenuBtn.addEventListener("click", function() {
-        navLinks.classList.toggle("active");
-        this.querySelector("i").classList.toggle("fa-bars");
-        this.querySelector("i").classList.toggle("fa-times");
-      });
+      if (mobileMenuBtn && navLinks) {
+        mobileMenuBtn.addEventListener("click", function() {
+          navLinks.classList.toggle("active");
+          this.querySelector("i").classList.toggle("fa-bars");
+          this.querySelector("i").classList.toggle("fa-times");
+        });
+      }
       
       // Close mobile menu when clicking outside
       document.addEventListener("click", function(event) {
-        if (!event.target.closest(".navbar") && navLinks.classList.contains("active")) {
+        if (
+          navLinks && mobileMenuBtn &&
+          !event.target.closest(".navbar") &&
+          navLinks.classList.contains("active")
+        ) {
           navLinks.classList.remove("active");
-          mobileMenuBtn.querySelector("i").classList.add("fa-bars");
-          mobileMenuBtn.querySelector("i").classList.remove("fa-times");
+          const icon = mobileMenuBtn.querySelector("i");
+          if (icon) {
+            icon.classList.add("fa-bars");
+            icon.classList.remove("fa-times");
+          }
         }
       });
       
@@ -291,17 +300,17 @@
       
       // Sticky navbar
       const navbar = document.getElementById('navbar');
-      const sticky = navbar.offsetTop;
-      
-      function stickyNavbar() {
-        if (window.pageYOffset > sticky) {
-          navbar.classList.add('sticky-navbar');
-        } else {
-          navbar.classList.remove('sticky-navbar');
-        }
+      let sticky = 0;
+      if (navbar) {
+        sticky = navbar.offsetTop;
+        window.addEventListener('scroll', function stickyNavbar() {
+          if (window.pageYOffset > sticky) {
+            navbar.classList.add('sticky-navbar');
+          } else {
+            navbar.classList.remove('sticky-navbar');
+          }
+        });
       }
-      
-      window.addEventListener('scroll', stickyNavbar);
       
       // Button hover effect
       let btns = document.querySelectorAll("a[data-color]");

@@ -112,8 +112,8 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 1,
             title: "Modern Residential Home",
             description: "Contemporary design with sustainable materials and energy-efficient features for a family of four.",
-            thumbnail: "css/images/image1.jpg",
-            image: "css/images/image1.jpg",
+            thumbnail: "/static/images/image1.jpg",
+            image: "/static/images/image1.jpg",
             year: "2023",
             category: "residential",
             featured: true
@@ -122,8 +122,8 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 2,
             title: "Corporate Office Building",
             description: "Open-concept workspace design with collaborative areas and natural lighting throughout.",
-            thumbnail: "css/images/image2.jpeg",
-            image: "css/images/image2.jpeg",
+            thumbnail: "/static/images/image2.jpeg",
+            image: "/static/images/image2.jpeg",
             year: "2022",
             category: "commercial",
             featured: true
@@ -132,8 +132,8 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 3,
             title: "Public Library Renovation",
             description: "Modernization of a historic library building while preserving its architectural heritage.",
-            thumbnail: "css/images/image3.jpg",
-            image: "css/images/image3.jpg",
+            thumbnail: "/static/images/image3.jpg",
+            image: "/static/images/image3.jpg",
             year: "2021",
             category: "public",
             featured: true
@@ -142,8 +142,8 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 4,
             title: "Luxury Apartment Complex",
             description: "High-end residential complex with premium amenities and stunning city views.",
-            thumbnail: "css/images/image4.jpg",
-            image: "css/images/image4.jpg",
+            thumbnail: "/static/images/image4.jpg",
+            image: "/static/images/image4.jpg",
             year: "2023",
             category: "residential",
             featured: false
@@ -152,8 +152,8 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 5,
             title: "Beachfront Restaurant",
             description: "Coastal dining experience with panoramic ocean views and sustainable design.",
-            thumbnail: "css/images/image5.jpg",
-            image: "css/images/image5.jpg",
+            thumbnail: "/static/images/image5.jpg",
+            image: "/static/images/image5.jpg",
             year: "2022",
             category: "commercial",
             featured: false
@@ -162,8 +162,8 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 6,
             title: "Urban Park Design",
             description: "Community green space with recreational areas, walking paths, and native landscaping.",
-            thumbnail: "css/images/image6.jpg",
-            image: "css/images/image6.jpg",
+            thumbnail: "/static/images/image6.jpg",
+            image: "/static/images/image6.jpg",
             year: "2021",
             category: "public",
             featured: false
@@ -172,8 +172,8 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 7,
             title: "Minimalist Villa",
             description: "Sleek, modern villa with clean lines and seamless indoor-outdoor living spaces.",
-            thumbnail: "css/images/image7.jpg",
-            image: "css/images/image7.jpg",
+            thumbnail: "/static/images/image7.jpg",
+            image: "/static/images/image7.jpg",
             year: "2024",
             category: "residential",
             featured: false
@@ -182,8 +182,8 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 8,
             title: "Healthcare Center",
             description: "Patient-centered medical facility designed for comfort, efficiency, and healing.",
-            thumbnail: "css/images/image8.jpg",
-            image: "css/images/image8.jpg",
+            thumbnail: "/static/images/image8.jpg",
+            image: "/static/images/image8.jpg",
             year: "2020",
             category: "public",
             featured: false
@@ -192,8 +192,8 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 9,
             title: "Boutique Hotel",
             description: "Intimate luxury hotel with unique character and personalized guest experiences.",
-            thumbnail: "css/images/image9.jpg",
-            image: "css/images/image9.jpg",
+            thumbnail: "/static/images/image9.jpg",
+            image: "/static/images/image9.jpg",
             year: "2023",
             category: "commercial",
             featured: false
@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             projectCard.innerHTML = `
                 <div class="project-image">
-                    <img src="${project.thumbnail}" alt="${project.title}" onerror="this.src='css/images/kristelle.jpg';">
+                    <img src="${project.thumbnail}" alt="${project.title}" onerror="this.src='/static/images/kristelle.jpg';">
                     <div class="layer"></div>
                 </div>
                 <div class="project-info">
@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span class="project-year">${project.year}</span>
                         <span class="project-category">${formatCategory(project.category)}</span>
                     </div>
-                    <a href="project-detail.html?id=${project.id}" class="project-link">View Details</a>
+                    <a href="/portfolio/${project.id}/" class="project-link">View Details</a>
                 </div>
             `;
             

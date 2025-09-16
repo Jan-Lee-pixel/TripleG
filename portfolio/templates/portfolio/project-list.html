@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Triple G Studio</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/projects.css' %}">
+    {% endblock %}
+</head>
+<body>
+    {% block body %}
+    <main class="project-list-content">
+        <div class="container">
+            <h1>Project List</h1>
+            <p>This is a placeholder for your project list. Implement your project list display here.</p>
+        </div>
+    </main>
+    {% endblock %}
+</body>
+</html>

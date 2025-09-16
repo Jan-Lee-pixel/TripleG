@@ -1,4 +1,4 @@
-{% extends 'core/layout.html' %}
+{% extends 'layout.html' %}
 {% load static %}
 
 <!DOCTYPE html>
@@ -10,9 +10,9 @@
   <title>Triple G Studio</title>
   <!-- Preload critical resources -->
   <link rel="preload" href="{% static 'images/logostick.png' %}" as="image">
-  <link rel="preload" href="{% static 'js/on/Color-scheme-remix.json' %}" as="fetch" crossorigin>
   
   <!-- Styles -->
+  <link rel="stylesheet" href="{% static 'css/projects.css' %}">
   <link rel="stylesheet" href="{% static 'css/loader.css' %}">
   <link rel="stylesheet" href="{% static 'css/home.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -81,6 +81,33 @@
     </div>
   </section>
 
+  <div class="filter-container">
+    <h2>ALL</h2>
+    <div class="filters">
+      <select id="year-filter">
+        <option value="all">All</option>       
+        <option value="2025">2025</option>
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+        <option value="2022">2022</option>
+        <option value="2021">2021</option>
+        <option value="2020">2020</option>
+      </select>
+      <select id="category-filter">
+        <option value="all">All</option>
+        <option value="residential">Residential Projects</option>
+        <option value="commercial">Commercial Projects</option>
+        <option value="public">Public Infrastructure</option>
+        <option value="featured">Featured Projects</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="projects-grid">
+    <!-- Project cards will be dynamically generated -->
+  </div>
+</div>
+
   
   <footer class="footer">
     <div class="footer-content">
@@ -117,6 +144,8 @@
   <!-- Scripts -->
   <script src="{% static 'js/chatbot.js' %}"></script>
   <script src="{% static 'js/home.js' %}"></script>
+  <script src="{% static 'js/loader.js' %}"></script>
+  <script src="{% static 'js/projects.js' %}"></script>
   <!-- <script src="{% static 'js/loader.js' %}"></script> -->
   <!-- loader.js will be loaded by loader-init.js -->
    {% endblock %}

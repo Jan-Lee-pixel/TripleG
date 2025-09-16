@@ -301,7 +301,7 @@
         button.setAttribute('aria-label', 'Open chat'); // Accessible label
         // Add the Triple G logo image
         const logo = document.createElement('img');
-        logo.src = './css/images/tripleGlogozoom.jpg'; // Add path to your logo
+        logo.src = '/static/images/tripleGlogozoom.jpg'; // Add path to your logo
         logo.alt = 'Chat logo'; // Alternate text for accessibility
         logo.style.width = '100%';
         logo.style.height = '100%';
@@ -323,7 +323,7 @@
 
     // Add logo beside the title
     const logo = document.createElement('img');
-    logo.src = './css/images/tripleGlogozoom.jpg'; // Path to your Triple G logo
+    logo.src = '/static/images/tripleGlogozoom.jpg'; // Path to your Triple G logo
     logo.alt = 'Triple G Logo';
     logo.style.width = '40px'; // Adjust the size of the logo
     logo.style.height = '40px'; // Match width and height for a circle
