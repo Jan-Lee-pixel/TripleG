@@ -1,0 +1,100 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ 
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Double Slider Login | Registration Form</title>
+  <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/register.css' %}">
+  <link rel="stylesheet" href="{% static 'css/loader.css' %}">
+  
+</head>
+<body>
+
+<div class="container" id="container">
+  <div class="mobile-nav">
+    <button type="button" id="mobileLoginBtn">Login</button>
+    <button type="button" id="mobileRegisterBtn">Register</button>
+  </div>
+  <div class="form-container login-container">
+    <form action="#">
+      <h1>login here</h1>
+      <input type="text" placeholder="Email or Username" />
+      <input type="password" placeholder="Password" />
+      <div class="content">
+        <div class="checkbox">
+          <input type="checkbox" name="checkbox" id="checkbox" />
+          <label for="remember-me">Remember me</label>
+        </div>
+        <div class="pass-link">
+          <a href="#">Forgot your password?</a>
+        </div>
+      </div>
+      <button>Login</button>
+      <span>or use your account</span>
+      <div class="social-container">
+        <a href="#" class="social"><i class="lni lni-facebook-fill"></i></a>
+        <a href="#" class="social"><i class="lni lni-google"></i></a>
+        <a href="#" class="social"><i class="lni lni-linkedin-original"></i></a>
+      </div>
+      
+      <!-- Mobile/Tablet Toggle Button -->
+      <div class="mobile-toggle-wrapper login-toggle">
+        <button type="button" class="mobile-toggle-btn" id="loginToRegisterBtn">
+          Don't have an account? Register
+        </button>
+      </div>
+    </form>
+  </div>
+  
+  <div class="form-container register-container">
+    <form action="#">
+      <h1>Register Here.</h1>
+      <input type="text" placeholder="Firstname" />
+      <input type="text" placeholder="Lastname" />
+      <input type="email" placeholder="Email" />
+      <input type="password" placeholder="Password" />
+      <button>Register</button>
+      <span>or use your account</span>
+      <div class="social-container">
+        <a href="#" class="social"><i class="lni lni-facebook-fill"></i></a>
+        <a href="#" class="social"><i class="lni lni-google"></i></a>
+        <a href="#" class="social"><i class="lni lni-linkedin-original"></i></a>
+      </div>
+      
+      <!-- Mobile/Tablet Toggle Button -->
+      <div class="mobile-toggle-wrapper register-toggle">
+        <button type="button" class="mobile-toggle-btn" id="registerToLoginBtn">
+          Already have an account? Login
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="overlay-container">
+    <div class="overlay">
+      <div class="overlay-panel overlay-left">
+            <h1 class="title">TRIPLE G DESIGN <br> STUDIO + CONSTRUCTION</h1>
+            <p>If you have an account, login here and have fun!</p>
+            <button class="ghost" id="login">Login
+                <i class="lni lni-arrow-right login"></i>
+            </button>
+      </div>
+      <div class="overlay-panel overlay-right">
+            <h1 class="title">Start your <br> journey now!</h1>
+            <p>If you don't have an account yet, join us and start knowing Triple G Studio.</p>
+            <button class="ghost" id="register">Register
+                <i class="lni lni-arrow-left register"></i>
+            </button>
+      </div>    
+    </div>
+  </div>
+</div>
+<script src="{% static 'js/register.js' %}"></script>
+<!-- <script src="{% static 'js/loader.js' %}"></script> -->
+</body>
+</html>
