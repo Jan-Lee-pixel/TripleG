@@ -1,6 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends "site_diary/layout_format.html" %}
+{% load static %}
+
+{% block head %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Site Diary - New Entry</title>
@@ -8,53 +9,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
-    <link rel="stylesheet" href="../SiteDiary/sitecss/diary.css">
-    <link rel="stylesheet" href="../SiteDiary/sitecss/createblog.css">
-    <link rel="stylesheet" href="../SiteDiary/sitecss/dashboard.css">
-    <script src="./sitecss/sitejs/diary.js"></script>
-    <script src="./sitecss/sitejs/weather.js"></script>
-</head>
-<body>
-    <!-- Navigation Bar -->
-   
-    <nav class="navbar">
-        <div class="logo-container">
-            <img src="../userside/css/images/logostick.png" alt="Logo" class="logo">
-            <div class="logo1">TRIPLE<a href="index.html">G</a></div>
-        </div>
-        <ul class="nav-links" id="navLinks">
-            <!-- General Pages -->
-            <li><a href="../home.html">Home</a></li>
-            <li><a href="dashboard.html">Dashboard</a></li>
-            <li><a href="chatbot.html">Message Center</a></li>        
-            <li><a href="newproject.html">Create Project</a></li>
-            
-            <li class="dropdown">
-                <a href="#" class="dropbtn">Blog ▾</a>
-                <div class="dropdown-content">
-                <a href="createblog.html">Create Blog</a>
-                <a href="drafts.html">Drafts</a>              
-                </div>
-            </li>
+    <link rel="stylesheet" href="{% static 'css/sitecss/diary.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/createblog.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/global-footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/global-header.css' %}">
+    <script src="{% static 'js/sitejs/diary.js' %}"></script>
+    <script src="{% static 'js/sitejs/weather.js' %}"></script>
+{% endblock %}
 
-            <!-- Site Diary Module -->
-            <li class="dropdown">
-                <a href="#" class="dropbtn">Site Diary ▾</a>
-                <div class="dropdown-content">
-                <a href="diary.html">New Entry</a>
-                <a href="history.html">History</a>
-                <a href="reports.html">Reports</a>
-                </div>
-            </li>
-
-            <!-- Settings -->
-            <li><a href="settings.html">Settings</a></li>
-        </ul>
-        <button class="mobile-menu-btn">
-            <i class="fas fa-bars"></i>
-        </button>
-    </nav>
-    
+{% block body %}
     <!-- Main Content Container -->
     <div class="container">
         <!-- Page Header -->
@@ -744,18 +707,5 @@
             </div>
         </div>
     </div>
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="copyright">
-                &copy; GG.Squad. All rights reserved.
-            </div>
-            <div class="footer-links">
-                <a href="#">Terms of Service</a>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Support</a>
-            </div>
-        </div>
-    </footer>
-</body>
-</html>
-
+    {% include "site_diary/navtemplate/layoutfooter.html" %}
+{% endblock %}

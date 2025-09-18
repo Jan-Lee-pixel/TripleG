@@ -242,6 +242,7 @@ a:hover {
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+  line-clamp: 2;
     -webkit-box-orient: vertical;
     max-height: 2.4rem;
 }
@@ -512,6 +513,7 @@ a:hover {
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+  line-clamp: 2;
     -webkit-box-orient: vertical;
     max-height: 2.4rem;
 }
@@ -995,78 +997,6 @@ tr:hover td {
 
 /* Responsive Styles */
 @media (max-width: 1200px) {
-    .stats-container {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-}
-
-@media (max-width: 992px) {
-    .navbar {
-        padding: 10px 20px;
-    }
-    
-    .nav-links {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background-color: var(--nav-bg);
-        flex-direction: column;
-        align-items: center;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .nav-links.active {
-        display: flex;
-    }
-
-    .nav-links li {
-        width: 100%;
-        margin: 0;
-    }
-
-    .nav-links a, .dropdown .dropbtn {
-        display: block;
-        padding: 12px 20px;
-        width: 100%;
-        text-align: center;
-        border-radius: 0;
-    }
-    
-    .nav-links li a::before {
-        display: none;
-    }
-
-    .mobile-menu-btn {
-        display: block;
-    }
-
-    .dropdown-content {
-        position: static;
-        width: 100%;
-        box-shadow: none;
-        background-color: rgba(0, 0, 0, 0.2);
-    }
-
-    .user-info {
-        display: none;
-    }
-    
-    .filter-controls {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .new-blog-btn {
-        width: 100%;
-    }
-    
-    .card-view {
-        grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
-    }
-}
-
 @media (max-width: 768px) {
     .page-title h1 {
         font-size: 22px;
@@ -1140,3 +1070,5 @@ tr:hover td {
         gap: 10px;
     }
 } 
+
+}
