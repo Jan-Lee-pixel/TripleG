@@ -8,16 +8,16 @@ def dashboard(request):
     return render(request, 'site_diary/dashboard.html')
 
 def chatbot(request):
-    return render(request, 'site_diary/chatbot.html')
+    return render(request, 'chatbot/chatbot.html')
 
 def newproject(request):
     return render(request, 'site_diary/newproject.html')
 
 def createblog(request):
-    return render(request, 'site_diary/createblog.html')
+    return render(request, 'blogcreation/createblog.html')
 
 def drafts(request):
-    return render(request, 'site_diary/drafts.html')
+    return render(request, 'blogcreation/drafts.html')
 
 def history(request):
     return render(request, 'site_diary/history.html')
@@ -28,3 +28,5 @@ def reports(request):
 def settings(request):
     return render(request, 'site_diary/settings.html')
 
+def sitedraft(request):
+    return render(request, 'sitedraft.html')

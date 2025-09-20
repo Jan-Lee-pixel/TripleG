@@ -61,7 +61,7 @@ a:hover {
 .container {
     flex: 1; /* Takes up all available space */
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 20px auto;
     padding: 0 20px;
     display: flex;
@@ -645,8 +645,5 @@ select.form-control {
         font-size: 0.9rem;
     }
 
-    .footer-content {
-        flex-direction: column;
-        gap: 10px;
-    }
+  
 } 

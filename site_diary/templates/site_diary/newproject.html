@@ -1,22 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "site_diary/layout_format.html" %}
+{% load static %}
+
+{% block head %}
     <title>New Project Entry | Triple G BuildHub</title>
-    <link rel="stylesheet" href="../SiteDiary/sitecss/dashboard.css">
-    <link rel="stylesheet" href="../SiteDiary/sitecss/reports.css">
-    <link rel="stylesheet" href="../SiteDiary/sitecss/createblog.css">
-    <link rel="stylesheet" href="../SiteDiary/sitecss/newproject.css">
+    <link rel="stylesheet" href="{% static 'css/sitecss/global-footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/reports.css' %}">   
+    <link rel="stylesheet" href="{% static 'css/sitecss/createblog.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/newproject.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
         .input-with-icon {
             position: relative;
             display: flex;
             align-items: center;
         }
-        
         .currency-symbol {
             position: absolute;
             left: 10px;
@@ -26,65 +23,24 @@
             font-weight: 500;
             pointer-events: none;
         }
-        
         .input-with-icon input[type="number"] {
             padding-left: 25px;
             width: 100%;
         }
-        
-        /* Remove spinner buttons for number input */
         input[type="number"]::-webkit-inner-spin-button,
         input[type="number"]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
-        
         input[type="number"] {
             -moz-appearance: textfield;
             appearance: textfield;
         }
     </style>
-</head>
-<body>
-               
- <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="logo-container">
-            <img src="../userside/css/images/logostick.png" alt="Logo" class="logo">
-            <div class="logo1">TRIPLE<a href="index.html">G</a></div>
-        </div>
-        <ul class="nav-links" id="navLinks">
-            <!-- General Pages -->
-            <li><a href="../userside/home.html">Home</a></li>
-            <li><a href="dashboard.html">Dashboard</a></li>
-            <li><a href="chatbot.html">Message Center</a></li>        
-            <li><a href="newproject.html">Create Project</a></li>
-            
-            <li class="dropdown">
-                <a href="#" class="dropbtn">Blog ▾</a>
-                <div class="dropdown-content">
-                <a href="createblog.html">Create Blog</a>
-                <a href="drafts.html">Drafts</a>              
-                </div>
-            </li>
+{% endblock %}
 
-            <!-- Site Diary Module -->
-            <li class="dropdown">
-                <a href="#" class="dropbtn">Site Diary ▾</a>
-                <div class="dropdown-content">
-                <a href="diary.html">New Entry</a>
-                <a href="history.html">History</a>
-                <a href="reports.html">Reports</a>
-                </div>
-            </li>
-
-            <!-- Settings -->
-            <li><a href="settings.html">Settings</a></li>
-        </ul>
-        <button class="mobile-menu-btn">
-            <i class="fas fa-bars"></i>
-        </button>
-    </nav>
+{% block body %}
+    
 
     <!-- Main container -->
     <div class="container">
@@ -211,18 +167,7 @@
             </form>
         </div>
     </div>
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="copyright">
-                &copy; GG.Squad. All rights reserved.
-            </div>
-            <div class="footer-links">
-                <a href="#">Terms of Service</a>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Support</a>
-            </div>
-        </div>
-    </footer>
+   
 
     <script>
         const form = document.getElementById("new-project-form");
@@ -341,6 +286,8 @@ form.addEventListener('submit', (e) => {
             })
         );
     </script>
-    <script src="./sitecss/sitejs/dashboard.js"></script>
+   <script src="{% static 'js/sitejs/mobile-btn.js' %}"></script>
 </body>
 </html>
+{% include "site_diary/navtemplate/layoutfooter.html" %}
+{% endblock %}

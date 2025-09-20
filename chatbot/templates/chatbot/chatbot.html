@@ -1,58 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "site_diary/layout_format.html" %}
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block head %}
     <title>Site Diary - Chatbot Logs</title>
-    <link rel="stylesheet" href="../SiteDiary/sitecss/history.css">
-    <link rel="stylesheet" href="../SiteDiary/sitecss/dashboard.css">
-    <link rel="stylesheet" href="../SiteDiary/sitecss/createblog.css">
-    <link rel="stylesheet" href="../SiteDiary/sitecss/chatbot.css">
+    <link rel="stylesheet" href="{% static 'css/sitecss/global-header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/global-footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/history.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/createblog.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/chatbot.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-</head>
+{% endblock %}
 
-<body>
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="logo-container">
-            <img src="../userside/css/images/logostick.png" alt="Logo" class="logo">
-            <div class="logo1">TRIPLE<a href="index.html">G</a></div>
-        </div>
-        <ul class="nav-links" id="navLinks">
-            <!-- General Pages -->
-            <li><a href="../home.html">Home</a></li>
-            <li><a href="dashboard.html">Dashboard</a></li>
-            <li><a href="chatbot.html">Message Center</a></li>        
-            <li><a href="newproject.html">Create Project</a></li>
-            
-            <li class="dropdown">
-                <a href="#" class="dropbtn">Blog ▾</a>
-                <div class="dropdown-content">
-                <a href="createblog.html">Create Blog</a>
-                <a href="drafts.html">Drafts</a>              
-                </div>
-            </li>
-            
-            <!-- Site Diary Module -->
-            <li class="dropdown">
-                <a href="#" class="dropbtn">Site Diary ▾</a>
-                <div class="dropdown-content">
-                <a href="diary.html">New Entry</a>
-                <a href="history.html">History</a>
-                <a href="reports.html">Reports</a>
-                </div>
-            </li>
-
-            <!-- Settings -->
-            <li><a href="settings.html">Settings</a></li>
-        </ul>
-        <button class="mobile-menu-btn">
-            <i class="fas fa-bars"></i>
-        </button>
-    </nav>
-
+{% block body %}
+    <div class="container chatbot-container">
+        <!-- Navigation Bar -->
+     
     <div class="container">
         <!-- Page Header -->
         <div class="page-header">
@@ -438,18 +401,7 @@
         </div>
     </div>
 
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="copyright">
-                &copy; GG.Squad. All rights reserved.
-            </div>
-            <div class="footer-links">
-                <a href="#">Terms of Service</a>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Support</a>
-            </div>
-        </div>
-    </footer>
+   
 
     <script>
         // Toggle between timeline and table views
@@ -540,6 +492,7 @@
             });
         });
     </script>
-    <script src="./sitecss/sitejs/dashboard.js"></script>
-</body>
-</html> 
+    <script src="./sitecss/sitejs/mobile-menu-btn.js"></script>
+    </div>
+    {% include "admin-nav-footer-template/layoutfooter.html" %}
+{% endblock %}

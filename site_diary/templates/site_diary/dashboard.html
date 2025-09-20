@@ -1,67 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "site_diary/layout_format.html" %}
+{% load static %}
+
+{% block head %}
     <title>Triple G BuildHub - Dashboard</title>
-    
-    <!-- Preload critical resources -->
-    <link rel="preload" href="../userside/css/images/logostick.png" as="image">
-    
-    <!-- Styles -->
-    <link rel="stylesheet" href="../css/loader.css">
-    <link rel="stylesheet" href="../SiteDiary/sitecss/dashboard.css">
-    <link rel="stylesheet" href="../SiteDiary/sitecss/createblog.css">
+    <link rel="stylesheet" href="{% static 'css/sitecss/global-footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/createblog.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Preload Lottie library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.10.2/lottie.min.js"></script>
-    
-    <!-- Loader initialization script -->
-    <script src="../js/loader-init.js"></script>
-</head>
-<body>
-    <!-- The loading screen will be dynamically injected here by loader.js -->
-    
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="logo-container">
-            <img src="../userside/css/images/logostick.png" alt="Logo" class="logo">
-            <div class="logo1">TRIPLE<a href="index.html">G</a></div>
-        </div>
-        <ul class="nav-links" id="navLinks">
-            <!-- General Pages -->
-            <li><a href="./userside/home.html">Home</a></li>
-            <li><a href="dashboard.html">Dashboard</a></li>
-            <li><a href="chatbot.html">Message Center</a></li>        
-            <li><a href="newproject.html">Create Project</a></li>
-            
-            <li class="dropdown">
-                <a href="#" class="dropbtn">Blog ▾</a>
-                <div class="dropdown-content">
-                <a href="createblog.html">Create Blog</a>
-                <a href="drafts.html">Drafts</a>              
-                </div>
-            </li>
+{% endblock %}
 
-            <!-- Site Diary Module -->
-            <li class="dropdown">
-                <a href="#" class="dropbtn">Site Diary ▾</a>
-                <div class="dropdown-content">
-                <a href="diary.html">New Entry</a>
-                <a href="history.html">History</a>
-                <a href="reports.html">Reports</a>
-                </div>
-            </li>
-
-            <!-- Settings -->
-            <li><a href="settings.html">Settings</a></li>
-        </ul>
-        <button class="mobile-menu-btn">
-            <i class="fas fa-bars"></i>
-        </button>
-    </nav>
-
+{% block body %}
     <div class="container">
         <!-- Dashboard Header -->
         <div class="dashboard-header">
@@ -154,7 +102,7 @@
         <div class="project-grid">
             <!-- Project Card 1 -->
             <div class="project-card" data-category="commercial" data-status="ongoing">
-                <img src="../userside/css/images/image6.jpg" alt="Harbor Tower" class="project-image">
+                <img src="{% static 'images/image6.jpg' %}" alt="Harbor Tower" class="project-image">
                 <div class="project-content">
                     <h3 class="project-title">Harbor Tower</h3>
                     <p class="project-description">Luxury commercial building with 35 floors, featuring premium office spaces and retail outlets.</p>
@@ -203,7 +151,7 @@
 
             <!-- Project Card 2 -->
             <div class="project-card" data-category="residential" data-status="planning">
-                <img src="../userside/css/images/image1.jpg" alt="Riverfront Promenade" class="project-image">
+                <img src="{% static 'images/image1.jpg' %}" alt="Riverfront Promenade" class="project-image">
                 <div class="project-content">
                     <h3 class="project-title">Riverfront Promenade</h3>
                     <p class="project-description">Public infrastructure project featuring walkways, parks, and recreational areas along the river.</p>
@@ -253,7 +201,7 @@
 
             <!-- Project Card 3 -->
             <div class="project-card">
-                <img src="../userside/css/images/image2.jpeg" alt="Oakridge Residences" class="project-image">
+                <img src="{% static 'images/image2.jpeg' %}" alt="Oakridge Residences" class="project-image">
                 <div class="project-content">
                     <h3 class="project-title">Oakridge Residences</h3>
                     <p class="project-description">Luxury residential complex with 120 units, featuring modern amenities and green spaces.</p>
@@ -302,7 +250,7 @@
 
             <!-- Project Card 4 -->
             <div class="project-card">
-                <img src="../userside/css/images/image3.jpg" alt="Tech Innovation Hub" class="project-image">
+                <img src="{% static 'images/image3.jpg' %}" alt="Tech Innovation Hub" class="project-image">
                 <div class="project-content">
                     <h3 class="project-title">Tech Innovation Hub</h3>
                     <p class="project-description">Modern facility designed for tech startups with co-working spaces, conference rooms, and labs.</p>
@@ -351,7 +299,7 @@
 
             <!-- Project Card 5 -->
             <div class="project-card">
-                <img src="../userside/css/images/image4.jpg" alt="Central Hospital Extension" class="project-image">
+                <img src="{% static 'images/image4.jpg' %}" alt="Central Hospital Extension" class="project-image">
                 <div class="project-content">
                     <h3 class="project-title">Central Hospital Extension</h3>
                     <p class="project-description">Healthcare facility expansion with new emergency department, ICU, and specialized treatment areas.</p>
@@ -400,7 +348,7 @@
 
             <!-- Project Card 6 -->
             <div class="project-card">
-                <img src="../userside/css/images/image5.jpg" alt="Sunset Mall Renovation" class="project-image">
+                <img src="{% static 'images/image5.jpg' %}" alt="Sunset Mall Renovation" class="project-image">
                 <div class="project-content">
                     <h3 class="project-title">Sunset Mall Renovation</h3>
                     <p class="project-description">Complete overhaul of existing mall with modern design, improved facilities, and expanded retail space.</p>
@@ -451,23 +399,12 @@
 
         
     </div>
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="copyright">
-                &copy; GG.Squad. All rights reserved.
-            </div>
-            <div class="footer-links">
-                <a href="#">Terms of Service</a>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Support</a>
-            </div>
-        </div>
-    </footer>
-
+   
 
     <!-- Scripts -->
-    <script src="./sitecss/sitejs/dashboard.js"></script>
+    <script src="{% static 'js/sitejs/dashboardjs' %}"></script>
     <script src="./sitecss/sitejs/chatarkside.js"></script>
     <!-- loader.js will be loaded by loader-init.js -->
-</body>
+    {% include "site_diary/navtemplate/layoutfooter.html" %}
+{% endblock %}
 </html>

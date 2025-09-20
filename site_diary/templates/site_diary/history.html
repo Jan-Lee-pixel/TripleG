@@ -1,58 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "site_diary/layout_format.html" %}
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block head %}
     <title>Site Diary - History</title>
-    <link rel="stylesheet" href="../SiteDiary/sitecss/history.css">
-    <link rel="stylesheet" href="../SiteDiary/sitecss/createblog.css">
-    <link rel="stylesheet" href="../SiteDiary/sitecss/dashboard.css">
+    <link rel="stylesheet" href="{% static 'css/sitecss/history.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/createblog.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/global-footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/dashboard.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
 
-</head>
-
-<body>
+{% block body %}
     <!-- Navigation Bar -->
-     <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="logo-container">
-            <img src="../userside/css/images/logostick.png" alt="Logo" class="logo">
-            <div class="logo1">TRIPLE<a href="index.html">G</a></div>
-        </div>
-        <ul class="nav-links" id="navLinks">
-            <!-- General Pages -->
-            <li><a href="../home.html">Home</a></li>
-            <li><a href="dashboard.html">Dashboard</a></li>
-            <li><a href="chatbot.html">Message Center</a></li>        
-            <li><a href="newproject.html">Create Project</a></li>
-            
-            <li class="dropdown">
-                <a href="#" class="dropbtn">Blog ▾</a>
-                <div class="dropdown-content">
-                <a href="createblog.html">Create Blog</a>
-                <a href="drafts.html">Drafts</a>              
-                </div>
-            </li>
-
-            <!-- Site Diary Module -->
-            <li class="dropdown">
-                <a href="#" class="dropbtn">Site Diary ▾</a>
-                <div class="dropdown-content">
-                <a href="diary.html">New Entry</a>
-                <a href="history.html">History</a>
-                <a href="reports.html">Reports</a>
-                </div>
-            </li>
-
-            <!-- Settings -->
-            <li><a href="settings.html">Settings</a></li>
-        </ul>
-        <button class="mobile-menu-btn">
-            <i class="fas fa-bars"></i>
-        </button>
-    </nav>
-
+   
     <div class="container">
         <!-- Page Header -->
         <div class="page-header">
@@ -242,14 +202,14 @@
                             </div>
                             <div class="photo-gallery">
                                 <div class="gallery-item">
-                                    <img src="https://via.placeholder.com/300" alt="Site Photo">
+                                    <img src="{% static 'images/image3.jpg' %}" alt="Site Photo">
                                 </div>
                                 <div class="gallery-item">
-                                    <img src="https://via.placeholder.com/300" alt="Site Photo">
+                                    <img src="{% static 'images/image3.jpg' %}" alt="Site Photo">
                                     <span class="photo-count">+3</span>
                                 </div>
                                 <div class="gallery-item">
-                                    <img src="https://via.placeholder.com/300" alt="Site Photo">
+                                    <img src="{% static 'images/image3.jpg' %}" alt="Site Photo">
                                 </div>
                             </div>
                         </div>
@@ -347,13 +307,13 @@
                                 <span>Site Photos</span>
                             </div>
                             <div class="photo-gallery">
-                                <div class="gallery-item">
-                                    <img src="https://via.placeholder.com/300" alt="Site Photo">
-                                </div>
-                                <div class="gallery-item">
-                                    <img src="https://via.placeholder.com/300" alt="Site Photo">
-                                </div>
-                            </div>
+    <div class="gallery-item">
+        <img src="{% static 'images/image3.jpg' %}" alt="Site Photo">
+    </div>
+    <div class="gallery-item">
+        <img src="{% static 'images/image4.jpg' %}" alt="Site Photo">
+    </div>
+</div>
                         </div>
                     </div>
                 </div>
@@ -450,13 +410,13 @@
                             </div>
                             <div class="photo-gallery">
                                 <div class="gallery-item">
-                                    <img src="https://via.placeholder.com/300" alt="Site Photo">
+                                    <img src="{% static 'images/HOUSEtriGdesign.jpg' %}" alt="Site Photo">
                                 </div>
                                 <div class="gallery-item">
-                                    <img src="https://via.placeholder.com/300" alt="Site Photo">
+                                    <img src="{% static 'images/image1.jpg' %}" alt="Site Photo">
                                 </div>
                                 <div class="gallery-item">
-                                    <img src="https://via.placeholder.com/300" alt="Site Photo">
+                                    <img src="{% static 'images/image2.jpeg' %}" alt="Site Photo">
                                     <span class="photo-count">+2</span>
                                 </div>
                             </div>
@@ -716,179 +676,8 @@
 
         </div>
     </div> 
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="copyright">
-                &copy; GG.Squad. All rights reserved.
-            </div>
-            <div class="footer-links">
-                <a href="#">Terms of Service</a>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Support</a>
-            </div>
-        </div>
-    </footer>
-    <!-- JavaScript Files -->
-
-    <script>
-        const form = document.getElementById("new-project-form");
-        const projectName = form.querySelector("#project-name");
-        const projectLocation = form.querySelector("#project-location");
-        const architectName = form.querySelector("#assigned-architect");
-        const projectType = form.querySelector("#project-type");
-        const startDate = form.querySelector("#start-date");
-        const endDate = form.querySelector("#end-date");
-        const budgetInput = form.querySelector("#project-budget");
-        const imageInput = form.querySelector("#project-image");
-        const imagePreview = document.getElementById("image-preview");
-        const imageOutput = document.getElementById("image-output");
-        const clearImage = document.getElementById("clear-image");
+  
     
-        // Image upload preview
-        imageInput.addEventListener("change", (event) => {
-            const file = event.target.files[0];
-            if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    imageOutput.src = e.target.result;
-                    imagePreview.style.display = "block";
-                };
-                reader.readAsDataURL(file);
-            } else {
-                alert("Invalid file type! Please upload a JPG or PNG image.");
-                event.target.value = "";
-            }
-        });
-    
-        // Clear image preview
-        clearImage.addEventListener("click", () => {
-            imageInput.value = "";
-            imagePreview.style.display = "none";
-        });
-    
-        // Budget input formatting and validation
-        budgetInput.addEventListener("input", function(e) {
-            // Remove all non-digit characters
-            let value = this.value.replace(/[^0-9]/g, '');
-            
-            // Format with commas
-            if (value.length > 0) {
-                value = parseInt(value, 10).toLocaleString('en-PH');
-            }
-            
-            this.value = value;
-        });
-    
-        // Reset form
-        document.getElementById("reset-btn").addEventListener("click", function() {
-            form.reset();
-            imagePreview.style.display = "none";
-            // Hide all error messages
-            document.querySelectorAll(".error-message").forEach(el => {
-                el.style.display = "none";
-            });
-        });
-    
-        // Form validation before submission
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-    
-            let valid = true;
-    
-            // Validate required fields
-            if (!projectName.value.trim()) {
-                document.getElementById("name-error").style.display = "block";
-                valid = false;
-            }
-            if (!projectLocation.value.trim()) {
-                document.getElementById("location-error").style.display = "block";
-                valid = false;
-            }
-            if (!architectName.value.trim()) {
-                document.getElementById("architect-error").style.display = "block";
-                valid = false;
-            }
-            if (!projectType.value) {
-                document.getElementById("type-error").style.display = "block";
-                valid = false;
-            }
-    
-            // Budget validation
-            const budgetValue = budgetInput.value.replace(/[^0-9]/g, '');
-            if (!budgetValue || parseInt(budgetValue) <= 0) {
-                document.getElementById("budget-error").style.display = "block";
-                valid = false;
-            }
-    
-            // Date validation
-            if (!startDate.value || !endDate.value || new Date(endDate.value) <= new Date(startDate.value)) {
-                document.getElementById("end-date-error").style.display = "block";
-                valid = false;
-            }
-    
-            // Check validation result
-            if (valid) {
-                // Generate project code (example: PRJ-2023-001)
-                const now = new Date();
-                const projectCode = `PRJ-${now.getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
-                document.getElementById("project-code").value = projectCode;
-                
-                // Format budget for display
-                const formattedBudget = parseFloat(budgetValue).toLocaleString('en-PH', {
-                    style: 'currency',
-                    currency: 'PHP'
-                });
-                
-                // In a real application, you would submit the form to the server here
-                alert(`Project created successfully!\n\nProject Code: ${projectCode}\nBudget: ${formattedBudget}`);
-                
-                // For demo purposes, we'll store the budget in localStorage
-                localStorage.setItem(`project_budget_${projectCode}`, budgetValue);
-                
-                form.reset();
-                imagePreview.style.display = "none";
-            }
-        });
-    
-        // Hide errors on input change
-        form.querySelectorAll("input, textarea, select").forEach((input) =>
-            input.addEventListener("input", () => {
-                const errorElement = input.nextElementSibling;
-                if (errorElement && errorElement.classList.contains("error-message")) {
-                    errorElement.style.display = "none";
-                }
-            })
-        );
-    
-        // Auto-generate project code when name is entered
-        projectName.addEventListener("blur", function() {
-            if (this.value.trim() && !document.getElementById("project-code").value) {
-                const initials = this.value.match(/\b\w/g) || [];
-                const code = initials.join('').toUpperCase();
-                const now = new Date();
-                document.getElementById("project-code").value = 
-                    `${code}-${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2, '0')}`;
-            }
-        });
-    
-        // Initialize date pickers with min/max validation
-        startDate.addEventListener("change", function() {
-            endDate.min = this.value;
-            if (endDate.value && new Date(endDate.value) < new Date(this.value)) {
-                endDate.value = "";
-            }
-        });
-    
-        endDate.addEventListener("change", function() {
-            if (startDate.value && new Date(this.value) < new Date(startDate.value)) {
-                document.getElementById("end-date-error").style.display = "block";
-                this.value = "";
-            } else {
-                document.getElementById("end-date-error").style.display = "none";
-            }
-        });
-    </script>
-    <script src="../SiteDiary/sitecss/sitejs/history.js"></script>
-</body>
-
-</html>
+    <script src="{% static 'js/sitejs/history.js' %}"></script>
+    {% include "site_diary/navtemplate/layoutfooter.html" %}
+{% endblock %}
