@@ -106,10 +106,76 @@
 
 .blog-card-actions {
   display: flex;
-  padding: 10px 15px;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 12px 20px 12px 20px;
   background-color: var(--light-gray);
-  gap: 8px;
+  gap: 12px;
+  border-top: 1px solid var(--border-color);
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 56px;
 }
+
+.blog-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+.blog-card-body {
+  flex: 1 1 auto;
+}
+
+.blog-card-actions .btn, .blog-card-actions .action-btn {
+  padding: 0 20px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  border-radius: 4px;
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  white-space: nowrap;
+  min-width: 80px;
+}
+
+.blog-card-actions .btn.reject, .blog-card-actions .action-btn.reject {
+  background: var(--danger-color);
+  color: #fff;
+}
+
+.blog-card-actions .btn.approve, .blog-card-actions .action-btn.approve {
+  background: var(--success-color);
+  color: #fff;
+}
+
+.blog-card-actions .btn.edit, .blog-card-actions .action-btn.edit {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.blog-card-actions .btn:hover, .blog-card-actions .action-btn:hover {
+  filter: brightness(0.95);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.09);
+}
+
+
+@media (max-width: 576px) {
+  .blog-card-actions {
+    flex-direction: row;
+    padding: 10px 8px;
+    gap: 8px;
+  }
+}
+
 
 .blog-card-actions .btn {
   flex: 1;

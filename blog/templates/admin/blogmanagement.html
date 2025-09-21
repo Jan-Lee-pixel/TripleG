@@ -1,62 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends 'admin-nav-footer-template/base.html' %}
+{% load static %}
+{% block title %}Admin Project Portfolio Management | Triple G BuildHub{% endblock %}
+{% block extra_head %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Blog Management | Triple G BuildHub</title>
-    <link rel="stylesheet" href="../../SiteDiary/sitecss/dashboard.css">
-    <link rel="stylesheet" href="../admincss/header.css">
-    <link rel="stylesheet" href="../admincss/admin-nav.css">
-    <link rel="stylesheet" href="../../SiteDiary/sitecss/reports.css">
-    <link rel="stylesheet" href="../../SiteDiary/sitecss/history.css">
-    <link rel="stylesheet" href="../admincss/blogmanagement.css">
+    <link rel="stylesheet" href="{% static 'css/admincss/nav.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admincss/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/reports.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/history.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admincss/blogmanagement.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
+    {% endblock %}
+    {% block content %}
     <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="logo-container">
-            <img src="../../userside/css/images/logostick.png" alt="Logo" class="logo">
-            <div class="logo1">TRIPLE<a href="#">G</a></div>
-        </div>
-        <ul class="nav-links" id="navLinks">
-            <li><a href="../../home.html">Home</a></li>
-            
-            <!-- Portfolio Dropdown -->
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle">Portfolio <i class="fas fa-caret-down"></i></a>
-                <ul class="dropdown-menu">
-                    <li><a href="projectmanagement.html">Project Management</a></li>
-                    <li><a href="blogmanagement.html" class="active">Blog Management</a></li>
-                </ul>
-            </li>
-            
-            <!-- Site Diary Dropdown -->
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle">Site Diary Management <i class="fas fa-caret-down"></i></a>
-                <ul class="dropdown-menu">
-                    <li><a href="admindiaryreviewer.html">Diary Review</a></li>
-                    <li><a href="adminhistory.html">Diary History</a></li>
-                    <li><a href="adminreports.html">Reports & Analytics</a></li>
-                    <li><a href="adminclientproject.html">Client Projects</a></li>
-                </ul>
-            </li>
-            
-            <!-- Admin Tools -->
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle">Admin Tools <i class="fas fa-caret-down"></i></a>
-                <ul class="dropdown-menu">
-                    <li><a href="adminmessagecenter.html">Message Center</a></li>
-                    <li><a href="adminusers.html">User Management</a></li>
-                </ul>
-            </li>
-            
-            <li><a href="../../SiteDiary/settings.html">Settings</a></li>
-        </ul>
-        <button class="mobile-menu-btn">
-            <i class="fas fa-bars"></i>
-        </button>
-    </nav>
     
     <div class="container">
         <!-- Page Header -->
@@ -230,7 +188,7 @@
                         <tbody>
                             <!-- Blog Item 1 - Approved -->
                             <tr class="blog-item" data-id="1">
-                                <td><img src="../../css/images/sustainable-1.jpg" alt="Blog Thumbnail" class="blog-thumb"></td>
+                                <td><img src="{% static 'images/image1.jpg' %}" alt="Blog Thumbnail" class="blog-thumb"></td>
                                 <td class="blog-title">Sustainable Building Materials for 2023</td>
                                 <td>Sustainable Building</td>
                                 <td>John Smith</td>
@@ -253,7 +211,7 @@
                             
                             <!-- Blog Item 2 - Pending -->
                             <tr class="blog-item" data-id="2">
-                                <td><img src="../../css/images/design-1.jpg" alt="Blog Thumbnail" class="blog-thumb"></td>
+                                <td><img src="{% static 'images/image2.jpeg' %}" alt="Blog Thumbnail" class="blog-thumb"></td>
                                 <td class="blog-title">Latest Architectural Design Trends</td>
                                 <td>Design Trends</td>
                                 <td>Emily Chen</td>
@@ -276,7 +234,7 @@
                             
                             <!-- Blog Item 3 - Rejected -->
                             <tr class="blog-item" data-id="3">
-                                <td><img src="../../css/images/tech-1.jpg" alt="Blog Thumbnail" class="blog-thumb"></td>
+                                <td><img src="{% static 'images/image3.jpg' %}" alt="Blog Thumbnail" class="blog-thumb"></td>
                                 <td class="blog-title">AI in Modern Construction Management</td>
                                 <td>Construction Technology</td>
                                 <td>Michael Wong</td>
@@ -306,7 +264,7 @@
                     <div class="blog-card" data-id="1">
                         <div class="blog-card-header">
                             <div class="blog-card-status status-approved">Approved</div>
-                            <img src="../../css/images/sustainable-1.jpg" alt="Blog Thumbnail" class="blog-card-image">
+                            <img src="{% static 'images/image4.jpg' %}" alt="Blog Thumbnail" class="blog-card-image">
                         </div>
                         <div class="blog-card-body">
                             <h3 class="blog-card-title">Sustainable Building Materials for 2023</h3>
@@ -333,7 +291,7 @@
                     <div class="blog-card" data-id="2">
                         <div class="blog-card-header">
                             <div class="blog-card-status status-pending">Pending</div>
-                            <img src="../../css/images/design-1.jpg" alt="Blog Thumbnail" class="blog-card-image">
+                            <img src="{% static 'images/image5.jpg' %}" alt="Blog Thumbnail" class="blog-card-image">
                         </div>
                         <div class="blog-card-body">
                             <h3 class="blog-card-title">Latest Architectural Design Trends</h3>
@@ -360,7 +318,7 @@
                     <div class="blog-card" data-id="3">
                         <div class="blog-card-header">
                             <div class="blog-card-status status-rejected">Rejected</div>
-                            <img src="../../css/images/tech-1.jpg" alt="Blog Thumbnail" class="blog-card-image">
+                            <img src="{% static 'images/image6.jpg' %}" alt="Blog Thumbnail" class="blog-card-image">
                         </div>
                         <div class="blog-card-body">
                             <h3 class="blog-card-title">AI in Modern Construction Management</h3>
@@ -408,7 +366,7 @@
                     </div>
                     
                     <div class="blog-featured-image">
-                        <img src="../../css/images/sustainable-1.jpg" alt="Sustainable Building Materials">
+                       <img src="{% static 'images/image4.jpg' %}" alt="Sustainable Building Materials">
                     </div>
                     
                     <div class="blog-content">
@@ -458,7 +416,7 @@
                     </div>
                     
                     <div class="blog-featured-image">
-                        <img src="../../css/images/design-1.jpg" alt="Architectural Design Trends">
+                        <img src="{% static 'images/image7.jpg' %}" alt="Architectural Design Trends">
                     </div>
                     
                     <div class="blog-content">
@@ -512,7 +470,7 @@
                     </div>
                     
                     <div class="blog-featured-image">
-                        <img src="../../css/images/tech-1.jpg" alt="AI in Construction">
+                        <img src="{% static 'images/image8.jpg' %}" alt="AI in Construction">
                     </div>
                     
                     <div class="blog-content">
@@ -604,20 +562,11 @@
         </div>
     </div>
     
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="copyright">
-                &copy; GG.Squad. All rights reserved.
-            </div>
-            <div class="footer-links">
-                <a href="#">Terms of Service</a>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Support</a>
-            </div>
-        </div>
-    </footer>
-    
-    <script src="../adminjs/admin-nav.js"></script>
-    <script src="../adminjs/blogmanagement.js"></script>
+   
+    {% endblock %}
+    {% block extra_scripts %}
+    <script src="{% static 'js/adminjs/mobile-btn.js' %}"></script>
+    <script src="{% static 'js/adminjs/blogmanagement.js' %}"></script>
+    {% endblock %}
 </body>
 </html>

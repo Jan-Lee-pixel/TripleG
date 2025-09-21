@@ -1,59 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'admin-nav-footer-template/base.html' %}
+{% load static %}
+{% block title %}Admin Project Portfolio Management | Triple G BuildHub{% endblock %}
+{% block extra_head %}
 
-<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Message Center | Triple G BuildHub</title>
-    <link rel="stylesheet" href="../../SiteDiary/sitecss/dashboard.css">
-    <link rel="stylesheet" href="../../SiteDiary/sitecss/history.css">
-    <link rel="stylesheet" href="../../SiteDiary/sitecss/chatbot.css">
-    <link rel="stylesheet" href="../admincss/adminmessagecenter.css">
-    <link rel="stylesheet" href="../admincss/header.css">
-    <link rel="stylesheet" href="../admincss/admin-nav.css">
+    <link rel="stylesheet" href="{% static 'css/sitecss/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/history.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/chatbot.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admincss/adminmessagecenter.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admincss/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admincss/nav.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-
+    {% endblock %}
+    {% block content %}
+    
+    
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="logo-container">
-            <img src="../../userside/css/images/logostick.png" alt="Logo" class="logo">
-            <div class="logo1">TRIPLE<a href="#">G</a></div>
-        </div>
-        <ul class="nav-links" id="navLinks">
-            <li><a href="../../home.html">Home</a></li>
-            <!-- Portfolio Dropdown -->
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle">Portfolio <i class="fas fa-caret-down"></i></a>
-                <ul class="dropdown-menu">
-                    <li><a href="projectmanagement.html">Project Management</a></li>
-
-                    <li><a href="blogmanagement.html">Blog Management</a></li>
-                </ul>
-            </li> <!-- Site Diary Dropdown -->
-            <li class="dropdown"> <a href="#" class="dropdown-toggle">Site Diary Management <i
-                        class="fas fa-caret-down"></i></a>
-                <ul class="dropdown-menu">
-                    <li><a href="admindiaryreviewer.html">Diary Review</a></li>
-                    <li><a href="adminhistory.html">Diary History</a></li>
-                    <li><a href="adminreports.html">Reports & Analytics</a></li>
-                    <li><a href="adminclientproject.html">Client Projects</a></li>
-                </ul>
-            </li> <!-- Admin Tools -->
-            <li class="dropdown"> <a href="#" class="dropdown-toggle">Admin Tools <i class="fas fa-caret-down"></i></a>
-                <ul class="dropdown-menu">
-                    <li><a href="adminmessagecenter.html" class="active">Message Center</a></li>
-                    <li><a href="adminusers.html">User Management</a></li>
-                </ul>
-            </li>
-            <li><a href="../../SiteDiary/settings.html">Settings</a></li>
-        </ul> <button class="mobile-menu-btn"> <i class="fas fa-bars"></i> </button>
-    </nav>
-
+   
 
     <div class="container">
-        <!-- Page Header -->
         <div class="page-header">
             <div class="page-title"> <i class="fas fa-comments"></i>
                 <h1>Admin Message Center</h1> <span class="notification-badge">5</span>
@@ -762,22 +729,12 @@
         </div>
     </div>
 
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="copyright">
-                &copy; GG.Squad. All rights reserved.
-            </div>
-            <div class="footer-links">
-                <a href="#">Terms of Service</a>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Support</a>
-            </div>
-        </div>
-    </footer>
-
+    {% endblock %}
+{% block extra_scripts %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../adminjs/admin-nav.js"></script>
-    <script src="../adminjs/adminmessagecenter.js"></script>
+    <script src="{% static 'js/adminjs/mobile-btn.js' %}"></script>
+    <script src="{% static 'js/adminjs/adminmessagecenter.js' %}"></script>
+    {% endblock %}
 </body>
 
 </html>

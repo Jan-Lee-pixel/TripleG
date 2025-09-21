@@ -1,65 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends 'admin-nav-footer-template/base.html' %}
+{% load static %}
+{% include 'admin-nav-footer-template/layoutnav.html' %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Diary Entry Viewer | Triple G BuildHub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="../../SiteDiary/sitecss/diary.css">
-    <link rel="stylesheet" href="../../SiteDiary/sitecss/dashboard.css">
-    <link rel="stylesheet" href="../admincss/admindiary.css">
-    <link rel="stylesheet" href="../admincss/admin-nav.css">
+    <link rel="stylesheet" href="{% static 'css/sitecss/diary.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admincss/adminside/diaryreviewer/admindiary.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admincss/admin-nav.css' %}">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
-</head>
-<body>
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="logo-container">
-            <img src="../../userside/css/images/logostick.png" alt="Logo" class="logo">
-            <div class="logo1">TRIPLE<a href="#">G</a></div>
-        </div>
-        <ul class="nav-links" id="navLinks">
-            <li><a href="../../home.html">Home</a></li>
-            
-            <!-- Portfolio Dropdown -->
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle">Portfolio <i class="fas fa-caret-down"></i></a>
-                <ul class="dropdown-menu">
-                    <li><a href="projectmanagement.html">Project Management</a></li>
-                    <li><a href="blogmanagement.html">Blog Management</a></li>
-                </ul>
-            </li>
-            
-            <!-- Site Diary Dropdown -->
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle">Site Diary Management <i class="fas fa-caret-down"></i></a>
-                <ul class="dropdown-menu">
-                    <li><a href="admindiaryreviewer.html" class="active">Diary Review</a></li>
-                    <li><a href="adminhistory.html">Diary History</a></li>
-                    <li><a href="adminreports.html">Reports & Analytics</a></li>
-                    <li><a href="adminclientproject.html">Client Projects</a></li>
-                </ul>
-            </li>
-            
-            <!-- Admin Tools -->
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle">Admin Tools <i class="fas fa-caret-down"></i></a>
-                <ul class="dropdown-menu">
-                    <li><a href="adminmessagecenter.html">Message Center</a></li>
-                    <li><a href="adminusers.html">User Management</a></li>
-                </ul>
-            </li>
-            
-            <li><a href="../../SiteDiary/settings.html">Settings</a></li>
-        </ul>
-        <button class="mobile-menu-btn">
-            <i class="fas fa-bars"></i>
-        </button>
-    </nav>
-    
 
+   
     
     <!-- Main Content Container -->
     <div class="container">
@@ -110,7 +64,7 @@
         
         <!-- Form Container -->
         <div class="form-container readonly-container">
-            <form id="siteEntryForm">
+            <form id="siteEntryForm" method="post">{% csrf_token %}
                 <!-- Project Information Section -->
                 <div class="form-section">
                     <div class="section-header">
@@ -417,19 +371,19 @@
                     </div>
                     <div class="photo-gallery readonly">
                         <div class="photo-item">
-                            <img src="https://via.placeholder.com/300x200/3c6e71/ffffff?text=12th+Floor+Concrete" alt="Site Photo" class="photo-preview">
+                            <img src="{% static 'img/placeholder-12th-floor-concrete.png' %}" alt="Site Photo" class="photo-preview">
                             <div class="photo-overlay">
                                 <div class="photo-description">12th floor concrete pouring in progress</div>
                             </div>
                         </div>
                         <div class="photo-item">
-                            <img src="https://via.placeholder.com/300x200/284b63/ffffff?text=13th+Floor+Formwork" alt="Site Photo" class="photo-preview">
+                            <img src="{% static 'img/placeholder-13th-floor-formwork.png' %}" alt="Site Photo" class="photo-preview">
                             <div class="photo-overlay">
                                 <div class="photo-description">13th floor column formwork preparation</div>
                             </div>
                         </div>
                         <div class="photo-item">
-                            <img src="https://via.placeholder.com/300x200/3c6e71/ffffff?text=Electrical+Work" alt="Site Photo" class="photo-preview">
+                            <img src="{% static 'img/placeholder-electrical-work.png' %}" alt="Site Photo" class="photo-preview">
                             <div class="photo-overlay">
                                 <div class="photo-description">Electrical conduit installation on 11th floor</div>
                             </div>
@@ -458,7 +412,7 @@
                     <div class="signature-container">
                         <label>Supervisor Signature</label>
                         <div class="signature-image">
-                            <img src="https://via.placeholder.com/400x100/f0f0f0/333333?text=John+Smith+Signature" alt="Supervisor Signature">
+                            <img src="{% static 'img/signature-john-smith.png' %}" alt="Supervisor Signature">
                         </div>
                     </div>
                     
@@ -476,7 +430,7 @@
                     <div class="signature-container">
                         <label>Client Representative Signature</label>
                         <div class="signature-image">
-                            <img src="https://via.placeholder.com/400x100/f0f0f0/333333?text=Mary+Johnson+Signature" alt="Client Signature">
+                            <img src="{% static 'img/signature-mary-johnson.png' %}" alt="Client Signature">
                         </div>
                     </div>
                 </div>
@@ -535,7 +489,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="revisionForm">
+                <form id="revisionForm" method="post" enctype="multipart/form-data">{% csrf_token %}
                     <div class="form-section">
                         <h3><i class="fas fa-info-circle"></i> Revision Details</h3>
                         
@@ -666,7 +620,9 @@
         </div>
     </footer>
     
-    <script src="../adminjs/admin-nav.js"></script>
-    <script src="../adminjs/admindiary.js"></script>
+    <script src="{% static 'adminjs/admin-nav.js' %}"></script>
+    <script src="{% static 'adminjs/adminside/diary/admindiary.js' %}"></script>
+    {% include "site_diary/navtemplate/layoutfooter.html" %}
 </body>
-</html> 
+
+</html>

@@ -52,13 +52,13 @@ body {
 }
 
 .logo-text {
-    font-size: 24px;
+    font-size: 30px;
     font-weight: 700;
     letter-spacing: 1px;
 }
 
 .logo-text span {
-    color: #4caf50;
+    color: rgba(255, 113, 32, 0.85);
 }
 
 .auth-content h1 {

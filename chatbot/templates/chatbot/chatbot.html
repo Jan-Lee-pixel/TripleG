@@ -448,27 +448,43 @@
                 });
             }
             
-            // Mark as read/unread functionality
+            // Mark as read/unread functionality (timeline view)
             const markReadButtons = document.querySelectorAll('.action-btn.mark-read');
             markReadButtons.forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.stopPropagation();
-                    const statusElement = this.closest('.timeline-header').querySelector('.log-status');
-                    if (statusElement) {
-                        statusElement.textContent = 'Read';
-                        statusElement.className = 'log-status status-read';
+                    // Timeline view
+                    const timelineStatus = this.closest('.timeline-header')?.querySelector('.log-status');
+                    if (timelineStatus) {
+                        timelineStatus.textContent = 'Read';
+                        timelineStatus.className = 'log-status status-read';
+                    }
+                    // Table view
+                    const tableRow = this.closest('tr');
+                    const tableStatus = tableRow?.querySelector('.log-status');
+                    if (tableStatus) {
+                        tableStatus.textContent = 'Read';
+                        tableStatus.className = 'log-status status-read';
                     }
                 });
             });
-            
+
             const markUnreadButtons = document.querySelectorAll('.action-btn.mark-unread');
             markUnreadButtons.forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.stopPropagation();
-                    const statusElement = this.closest('.timeline-header').querySelector('.log-status');
-                    if (statusElement) {
-                        statusElement.textContent = 'New';
-                        statusElement.className = 'log-status status-new';
+                    // Timeline view
+                    const timelineStatus = this.closest('.timeline-header')?.querySelector('.log-status');
+                    if (timelineStatus) {
+                        timelineStatus.textContent = 'New';
+                        timelineStatus.className = 'log-status status-new';
+                    }
+                    // Table view
+                    const tableRow = this.closest('tr');
+                    const tableStatus = tableRow?.querySelector('.log-status');
+                    if (tableStatus) {
+                        tableStatus.textContent = 'New';
+                        tableStatus.className = 'log-status status-new';
                     }
                 });
             });

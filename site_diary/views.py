@@ -28,5 +28,20 @@ def reports(request):
 def settings(request):
     return render(request, 'site_diary/settings.html')
 
+def adminclientproject(request):
+    return render(request, 'admin/adminclientproject.html')
+
+def admindiary(request):
+    return render(request, 'admin/admindiary.html')
+
+def admindiaryreviewer(request):
+    return render(request, 'admin/admindiaryreviewer.html')
+
+def adminhistory(request):
+    return render(request, 'admin/adminhistory.html')
+
+def adminreports(request):
+    return render(request, 'admin/adminreports.html')
+
 def sitedraft(request):
-    return render(request, 'sitedraft.html')
+    return render(request, 'site_diary/sitedraft.html')

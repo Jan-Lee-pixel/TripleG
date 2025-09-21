@@ -18,15 +18,22 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from site_diary import views as site_diary_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
     path('accounts/', include('accounts.urls')),
     path('portfolio/', include(('portfolio.urls', 'portfolio'), namespace='portfolio')),
-    path('diary/', include('site_diary.urls')),
-    path('blog/', include('blog.urls')),
-    path('chat/', include('chatbot.urls')),
+    path('diary/', include(('site_diary.urls', 'site'), namespace='site')),
+    path('blog/', include(('blog.urls', 'blog'), namespace='blog')),
+    path('chat/', include(('chatbot.urls', 'chatbot'), namespace='chatbot')),
+    # Direct admin URLs for easier access
+    path('adminside/clientproject/', site_diary_views.adminclientproject, name='direct_adminclientproject'),
+    path('adminside/diary/', site_diary_views.admindiary, name='direct_admindiary'),
+    path('adminside/diaryreviewer/', site_diary_views.admindiaryreviewer, name='direct_admindiaryreviewer'),
+    path('adminside/history/', site_diary_views.adminhistory, name='direct_adminhistory'),
+    path('adminside/reports/', site_diary_views.adminreports, name='direct_adminreports'),
 ]
 
 if settings.DEBUG:

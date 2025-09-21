@@ -1,64 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Project Portfolio Management | Triple G BuildHub</title>
-    <link rel="stylesheet" href="../../SiteDiary/sitecss/dashboard.css">
-    <link rel="stylesheet" href="../../SiteDiary/sitecss/history.css">
-    <link rel="stylesheet" href="../admincss/admindiaryreviewer.css">
-    <link rel="stylesheet" href="../admincss/projectmanagement.css">
-    <link rel="stylesheet" href="../admincss/blogmanagement.css">
-    <link rel="stylesheet" href="../admincss/header.css">
-    <link rel="stylesheet" href="../admincss/admin-nav.css">
+{% extends 'admin-nav-footer-template/base.html' %}
+{% load static %}
+{% block title %}Admin Project Portfolio Management | Triple G BuildHub{% endblock %}
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/admincss/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admincss/admindiaryreviewer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/history.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admincss/projectmanagement.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admincss/blogmanagement.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admincss/nav.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admincss/admin-nav.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-     <!-- Navigation Bar -->
-     <nav class="navbar">
-        <div class="logo-container">
-            <img src="../../userside/css/images/logostick.png" alt="Logo" class="logo">
-            <div class="logo1">TRIPLE<a href="#">G</a></div>
-        </div>
-        <ul class="nav-links" id="navLinks">
-            <li><a href="../../home.html">Home</a></li>
-            
-            <!-- Portfolio Dropdown -->
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle">Portfolio <i class="fas fa-caret-down"></i></a>
-                <ul class="dropdown-menu">
-                    <li><a href="projectmanagement.html">Project Management</a></li>
-                    <li><a href="blogmanagement.html">Blog Management</a></li>
-                </ul>
-            </li>
-            
-            <!-- Site Diary Dropdown -->
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle">Site Diary Management <i class="fas fa-caret-down"></i></a>
-                <ul class="dropdown-menu">
-                    <li><a href="admindiaryreviewer.html" class="active">Diary Review</a></li>
-                    <li><a href="adminhistory.html">Diary History</a></li>
-                    <li><a href="adminreports.html">Reports & Analytics</a></li>
-                    <li><a href="adminclientproject.html">Client Projects</a></li>
-                </ul>
-            </li>
-            
-            <!-- Admin Tools -->
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle">Admin Tools <i class="fas fa-caret-down"></i></a>
-                <ul class="dropdown-menu">
-                    <li><a href="adminmessagecenter.html">Message Center</a></li>
-                    <li><a href="adminusers.html">User Management</a></li>
-                </ul>
-            </li>
-            
-            <li><a href="../../SiteDiary/settings.html">Settings</a></li>
-        </ul>
-        <button class="mobile-menu-btn">
-            <i class="fas fa-bars"></i>
-        </button>
-    </nav>
-    
+{% endblock %}
+{% block content %}
+
+
+
+        
 
     <div class="container">
         <!-- Page Header (Admin Theme) -->
@@ -172,16 +130,43 @@
                 </div>
             </form>
         </div>
-        <!-- (Optional Future) Table of Projects -->
-        <div class="card" style="margin-top:2rem;">
-            <h2><i class="fas fa-table"></i> Existing Projects</h2>
+       
+        <!-- Table View (history style) -->
+        <div class="table-view" id="tableView" style="display:block;">
             <div class="table-responsive">
-                <table id="projectsTable">
+                <table>
                     <thead>
                         <tr>
                             <th>Title</th>
                             <th>Status</th>
                             <th>Visibility</th>
+                            <th>Completion Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="table-project-name">Sample Project</td>
+                            <td>In Progress</td>
+                            <td>Public</td>
+                            <td>Jan 1, 2025</td>
+                            <td>
+                                <div class="table-actions">
+                                    <button class="action-btn download" title="Download PDF">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </button>
+                                    <button class="action-btn view" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- End Table View -->
+
                             <th>Completion Date</th>
                             <th>Actions</th>
                         </tr>
@@ -204,7 +189,11 @@
             <div class="modal-footer" id="modalFooter"></div>
         </div>
     </div>
-    <script src="../adminjs/projectmanagement.js"></script>
-    <script src="../adminjs/admin-nav.js"></script>
+    {% endblock %}
+{% block extra_scripts %}
+   
+    <script src="{% static 'js/adminjs/projectmanagement.js' %}"></script>
+    <script src="{% static 'js/adminjs/mobile-btn.js' %}"></script>
+{% endblock %}
 </body>
 </html>
