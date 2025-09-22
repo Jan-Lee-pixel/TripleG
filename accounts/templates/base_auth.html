@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Auth | Triple G BuildHub{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/admincss/login.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-sidebar">
+            <div class="auth-logo">
+                <img src="{% static 'images/logostick.png' %}" alt="Logo" class="logo">
+                <div class="logo-text">TRIPLE<span>G</span></div>
+            </div>
+            <div class="auth-content">
+                {% block sidebar_content %}{% endblock %}
+            </div>
+            <div class="auth-footer">
+                <p>&copy; 2023 Triple G BuildHub. All rights reserved.</p>
+            </div>
+        </div>
+        <div class="auth-form-container">
+            {% block form_content %}{% endblock %}
+        </div>
+    </div>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
