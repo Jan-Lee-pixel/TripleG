@@ -23,7 +23,7 @@ from site_diary import views as site_diary_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
-    path('accounts/', include('accounts.urls')),
+    path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
     path('portfolio/', include(('portfolio.urls', 'portfolio'), namespace='portfolio')),
     path('diary/', include(('site_diary.urls', 'site'), namespace='site')),
     path('blog/', include(('blog.urls', 'blog'), namespace='blog')),

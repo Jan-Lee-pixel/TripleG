@@ -34,12 +34,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Load saved user data from localStorage
   loadUserData();
+  
+  // Initialize toggle switches
+  initializeToggleSwitches();
 
   // Profile Form handling
   const profileForm = document.getElementById('profileForm');
-  const emailInput = document.getElementById('email');
+  const emailInput = document.getElementById('id_email');
   const emailError = document.getElementById('emailError');
-  const phoneInput = document.getElementById('phone');
+  const phoneInput = document.getElementById('id_phone');
   const phoneError = document.getElementById('phoneError');
   const profileSuccess = document.getElementById('profileSuccess');
 
@@ -66,11 +69,9 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
 
-    // Form submission
+    // Form submission - Let Django handle it, don't prevent default
     profileForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      // Validate all fields
+      // Validate all fields before submission
       let isValid = true;
       
       if (emailInput && !validateEmail(emailInput)) {
@@ -81,18 +82,13 @@ document.addEventListener('DOMContentLoaded', function() {
         isValid = false;
       }
       
-      if (isValid) {
-        // Save profile data
-        saveProfileData();
-        
-        // Show success message
-        if (profileSuccess) {
-          profileSuccess.style.display = 'flex';
-          setTimeout(() => {
-            profileSuccess.style.display = 'none';
-          }, 3000);
-        }
+      if (!isValid) {
+        e.preventDefault(); // Only prevent if validation fails
+        return false;
       }
+      
+      // If validation passes, let Django handle the form submission
+      console.log('[DEBUG] Form validation passed, submitting to Django backend...');
     });
   }
 
@@ -233,35 +229,34 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Profile image upload
-  const avatarUpload = document.getElementById('avatar-upload');
+  // Profile image upload - Using HTML label functionality
+  console.log('[DEBUG] Profile upload using HTML label for attribute...');
+  
   const profileImage = document.getElementById('profileImage');
-  const avatarOverlay = document.querySelector('.avatar-upload-overlay');
-
-  if (avatarUpload && profileImage) {
-    // Click on avatar or overlay opens file dialog
-    if (avatarOverlay) {
-      avatarOverlay.addEventListener('click', function() {
-        avatarUpload.click();
-      });
-    }
-
-    avatarUpload.addEventListener('change', function(event) {
+  const fileInput = document.getElementById('id_profile_pic_debug');
+  
+  // Make the profile image clickable as additional option
+  if (profileImage) {
+    profileImage.addEventListener('click', function(e) {
+      console.log('[DEBUG] Profile image clicked - triggering label click');
+      const changePhotoBtn = document.getElementById('changePhotoBtn');
+      if (changePhotoBtn) {
+        changePhotoBtn.click();
+      }
+    });
+    profileImage.style.cursor = 'pointer';
+  }
+  
+  // Handle file selection and preview
+  if (fileInput && profileImage) {
+    fileInput.addEventListener('change', function(event) {
       const file = event.target.files[0];
       if (file) {
+        console.log('[DEBUG] File selected:', file.name);
         const reader = new FileReader();
         reader.onload = function(e) {
           profileImage.src = e.target.result;
-          
-          // Save to localStorage
-          localStorage.setItem('userProfileImage', e.target.result);
-          
-          // Update display name image as well
-          const displayNameEl = document.getElementById('displayName');
-          if (displayNameEl) {
-            displayNameEl.textContent = document.getElementById('firstName').value + ' ' + 
-                                       document.getElementById('lastName').value;
-          }
+          console.log('[DEBUG] Profile image preview updated');
         };
         reader.readAsDataURL(file);
       }
@@ -337,10 +332,10 @@ document.addEventListener('DOMContentLoaded', function() {
   // Save data functions
   function saveProfileData() {
     const userData = {
-      firstName: document.getElementById('firstName').value,
-      lastName: document.getElementById('lastName').value,
-      email: document.getElementById('email').value,
-      phone: document.getElementById('phone').value,
+      firstName: document.getElementById('id_first_name')?.value || '',
+      lastName: document.getElementById('id_last_name')?.value || '',
+      email: document.getElementById('id_email')?.value || '',
+      phone: document.getElementById('id_phone')?.value || '',
     };
     
     localStorage.setItem('userData', JSON.stringify(userData));
@@ -368,10 +363,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (savedUserData) {
       const userData = JSON.parse(savedUserData);
       
-      if (document.getElementById('firstName')) document.getElementById('firstName').value = userData.firstName || '';
-      if (document.getElementById('lastName')) document.getElementById('lastName').value = userData.lastName || '';
-      if (document.getElementById('email')) document.getElementById('email').value = userData.email || '';
-      if (document.getElementById('phone')) document.getElementById('phone').value = userData.phone || '';
+      if (document.getElementById('id_first_name')) document.getElementById('id_first_name').value = userData.firstName || '';
+      if (document.getElementById('id_last_name')) document.getElementById('id_last_name').value = userData.lastName || '';
+      if (document.getElementById('id_email')) document.getElementById('id_email').value = userData.email || '';
+      if (document.getElementById('id_phone')) document.getElementById('id_phone').value = userData.phone || '';
       
       // Update display elements
       updateDisplayElements(userData);
@@ -412,6 +407,86 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (displayEmail && userData.email) {
       displayEmail.textContent = userData.email;
+    }
+  }
+  
+  // Initialize toggle switches functionality
+  function initializeToggleSwitches() {
+    const toggleSwitches = document.querySelectorAll('.toggle-switch input[type="checkbox"]');
+    
+    toggleSwitches.forEach(toggle => {
+      // Add click event listener
+      toggle.addEventListener('change', function() {
+        console.log(`[DEBUG] Toggle ${this.id} changed to: ${this.checked}`);
+        
+        // Add visual feedback
+        const toggleContainer = this.closest('.toggle-container');
+        if (toggleContainer) {
+          if (this.checked) {
+            toggleContainer.classList.add('toggle-active');
+          } else {
+            toggleContainer.classList.remove('toggle-active');
+          }
+        }
+        
+        // Save toggle state to localStorage
+        saveToggleState(this.id, this.checked);
+        
+        // Show a brief feedback message
+        showToggleFeedback(this);
+      });
+      
+      // Load saved state
+      const savedState = localStorage.getItem(`toggle_${toggle.id}`);
+      if (savedState !== null) {
+        toggle.checked = savedState === 'true';
+      }
+    });
+  }
+  
+  function saveToggleState(toggleId, state) {
+    localStorage.setItem(`toggle_${toggleId}`, state.toString());
+  }
+  
+  function showToggleFeedback(toggle) {
+    const container = toggle.closest('.toggle-container');
+    if (container) {
+      // Create temporary feedback element
+      const feedback = document.createElement('div');
+      feedback.className = 'toggle-feedback';
+      feedback.textContent = toggle.checked ? '✓ Enabled' : '✗ Disabled';
+      feedback.style.cssText = `
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        background: ${toggle.checked ? '#4CAF50' : '#f44336'};
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      `;
+      
+      container.style.position = 'relative';
+      container.appendChild(feedback);
+      
+      // Animate in
+      setTimeout(() => {
+        feedback.style.opacity = '1';
+      }, 10);
+      
+      // Remove after 2 seconds
+      setTimeout(() => {
+        feedback.style.opacity = '0';
+        setTimeout(() => {
+          if (feedback.parentNode) {
+            feedback.parentNode.removeChild(feedback);
+          }
+        }, 300);
+      }, 2000);
     }
   }
 });

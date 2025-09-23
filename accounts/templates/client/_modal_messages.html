@@ -1,0 +1,32 @@
+{% load static %}
+{% if messages %}
+<div id="customModalOverlay" class="custom-modal-overlay" role="dialog" aria-modal="true">
+  <div class="custom-modal-content">
+    <button class="custom-modal-close" aria-label="Close modal">&times;</button>
+    {% for message in messages %}
+      <div class="custom-modal-body custom-alert-{{ message.tags }}">
+        <div class="custom-modal-icon">
+          {% if message.tags == 'success' %}
+            <i class="lni lni-checkmark-circle"></i>
+          {% elif message.tags == 'info' %}
+            <i class="lni lni-information"></i>
+          {% elif message.tags == 'warning' %}
+            <i class="lni lni-warning"></i>
+          {% elif message.tags == 'error' %}
+            <i class="lni lni-cross-circle"></i>
+          {% endif %}
+        </div>
+        <div class="custom-modal-text">
+          <h3>{{ message.tags|title }}</h3>
+          <p>{{ message }}</p>
+        </div>
+        <div class="custom-modal-actions">
+          <button type="button" class="custom-btn-cancel">Cancel</button>
+          <button type="button" class="custom-btn-confirm">Confirm</button>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+<!-- CSS and JS should be included in your main template, not here -->

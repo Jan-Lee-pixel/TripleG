@@ -1,69 +1,103 @@
-{% extends 'base_auth.html' %}
-{% block title %}Login | Triple G BuildHub{% endblock %}
-{% block sidebar_content %}
-    <h1>Welcome Back to BuildHub</h1>
-    <p>Your construction project management solution. Sign in to access your dashboard and manage your projects.</p>
-    <div class="auth-features">
-        <div class="feature"><i class="fas fa-calendar-check"></i><span>Track project milestones</span></div>
-        <div class="feature"><i class="fas fa-tasks"></i><span>Manage daily site activities</span></div>
-        <div class="feature"><i class="fas fa-chart-line"></i><span>View detailed analytics</span></div>
-    </div>
-{% endblock %}
-{% block form_content %}
-    <div class="auth-form-wrapper">
-        <div class="auth-form-header">
-            <h2>Sign In</h2>
-            <p>Enter your credentials to access your account</p>
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ 
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Double Slider Login | Registration Form</title>
+  <link rel="stylesheet" href="{% static 'css/sitecss/modal_messages.css' %}">
+  <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/register.css' %}">
+  <link rel="stylesheet" href="{% static 'css/loader.css' %}">
+  
+</head>
+<body>
+{% include 'client/_modal_messages.html' %}
+
+<div class="container" id="container">
+  <div class="mobile-nav">
+    <button type="button" id="mobileLoginBtn">Login</button>
+    <button type="button" id="mobileRegisterBtn">Register</button>
+  </div>
+  <div class="form-container login-container">
+    <form method="POST" action="" autocomplete="on">
+      <h1>login here</h1>
+      {% csrf_token %}
+     
+      <input type="text" id="login-username" name="username" placeholder="Email or Username" required />
+      <input type="password" id="login-password" name="password" placeholder="Password" required />
+      <div class="content">
+        <div class="checkbox">
+          <input type="checkbox" name="remember" id="login-remember" />
+          <label for="remember-me">Remember me</label>
         </div>
-        <form id="loginForm" class="auth-form">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <div class="input-with-icon">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <div class="input-with-icon">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                    <button type="button" class="password-toggle"><i class="fas fa-eye"></i></button>
-                </div>
-            </div>
-            <div class="form-options">
-                <div class="checkbox-container">
-                    <input type="checkbox" id="remember" name="remember">
-                    <label for="remember">Remember me</label>
-                </div>
-                <a href="#" class="forgot-password">Forgot password?</a>
-            </div>
-            <button type="submit" class="btn btn-primary login-btn">Sign In</button>
-            <div class="auth-divider"><span>Or</span></div>
-            <div class="alternative-logins">
-                <button type="button" class="btn btn-outline social-login"><i class="fab fa-google"></i><span>Sign in with Google</span></button>
-                <button type="button" class="btn btn-outline social-login"><i class="fab fa-microsoft"></i><span>Sign in with Microsoft</span></button>
-            </div>
-        </form>
-        <div class="auth-form-footer">
-            <p>Don't have an account? <a href="{% url 'accounts:register' %}">Register here</a></p>
+        <div class="pass-link">
+          <a href="#">Forgot your password?</a>
         </div>
+      </div>
+      <button type="submit">Login</button>
+      <span>or use your account</span>
+      <div class="social-container">
+        <a href="#" class="social"><i class="lni lni-facebook-fill"></i></a>
+        <a href="#" class="social"><i class="lni lni-google"></i></a>
+        <a href="#" class="social"><i class="lni lni-linkedin-original"></i></a>
+      </div>
+      <!-- Mobile/Tablet Toggle Button -->
+      <div class="mobile-toggle-wrapper login-toggle">
+        <button type="button" class="mobile-toggle-btn" id="loginToRegisterBtn">
+          Don't have an account? Register
+        </button>
+      </div>
+    </form>
+  </div>
+  
+  <div class="form-container register-container">
+    <form method="POST" action="" autocomplete="on">
+      <h1>Register Here.</h1>
+      {% csrf_token %}
+      <input type="text" id="register-firstname" name="first_name" placeholder="Firstname" required />
+      <input type="text" id="register-lastname" name="last_name" placeholder="Lastname" required />
+      <input type="email" id="register-email" name="email" placeholder="Email" required />
+      <input type="password" id="register-password" name="reg_password" placeholder="Password" required />
+      <button type="submit" name="register">Register</button>
+      <span>or use your account</span>
+      <div class="social-container">
+        <a href="#" class="social"><i class="lni lni-facebook-fill"></i></a>
+        <a href="#" class="social"><i class="lni lni-google"></i></a>
+        <a href="#" class="social"><i class="lni lni-linkedin-original"></i></a>
+      </div>
+      <!-- Mobile/Tablet Toggle Button -->
+      <div class="mobile-toggle-wrapper register-toggle">
+        <button type="button" class="mobile-toggle-btn" id="registerToLoginBtn">
+          Already have an account? Login
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="overlay-container">
+    <div class="overlay">
+      <div class="overlay-panel overlay-left">
+            <h1 class="title">TRIPLE G DESIGN <br> STUDIO + CONSTRUCTION</h1>
+            <p>If you have an account, login here and have fun!</p>
+            <button class="ghost" id="login">Login
+                <i class="lni lni-arrow-right login"></i>
+            </button>
+      </div>
+      <div class="overlay-panel overlay-right">
+            <h1 class="title">Start your <br> journey now!</h1>
+            <p>If you don't have an account yet, join us and start knowing Triple G Studio.</p>
+            <button class="ghost" id="register">Register
+                <i class="lni lni-arrow-left register"></i>
+            </button>
+      </div>    
     </div>
-    <!-- Error Modal -->
-    <div class="modal" id="errorModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Invalid Credentials</h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="error-icon"><i class="fas fa-exclamation-circle"></i></div>
-                <p>The email or password you entered is incorrect. Please try again.</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="closeModalBtn">Try Again</button>
-            </div>
-        </div>
-    </div>
-{% endblock %}
-{% block extra_scripts %}<script src="{% static 'js/adminjs/login.js' %}"></script>{% endblock %}
+  </div>
+</div>
+<script src="{% static 'js/register.js' %}"></script>
+<script src="{% static 'js/sitejs/modal_messages.js' %}"></script>
+</body>
+</html>

@@ -6,7 +6,7 @@
   {% block head %}
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Settings | Triple G Studio</title>
+  <title>User Settings | Triple G Studio - {{ cache_buster }}</title>
   <!-- Preload critical resources -->
   <link rel="preload" href="{% static 'images/logostick.png' %}" as="image">
   
@@ -14,6 +14,48 @@
   <link rel="stylesheet" href="{% static 'css/home.css' %}">
   <link rel="stylesheet" href="{% static 'css/usersettings.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    .status-active { color: #28a745; font-weight: 600; }
+    .status-inactive { color: #dc3545; font-weight: 600; }
+    .account-info-value { font-weight: 500; }
+    
+    /* Message alerts */
+    .message-alert { margin-bottom: 20px; padding: 15px; border-radius: 8px; }
+    .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .close-message { float: right; background: none; border: none; font-size: 18px; cursor: pointer; }
+    
+    /* Toggle switches */
+    .toggle-switch { cursor: pointer; }
+    .toggle-switch input[type="checkbox"] { cursor: pointer; }
+    .toggle-slider { cursor: pointer; transition: all 0.3s ease; }
+    .toggle-container { transition: all 0.3s ease; }
+    .toggle-container:hover { background-color: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 5px; }
+    .toggle-active { background-color: rgba(76, 175, 80, 0.1); }
+    
+    /* Profile image upload */
+    .avatar-upload-overlay { cursor: pointer; transition: all 0.3s ease; }
+    .avatar-upload-overlay:hover { background-color: rgba(0, 0, 0, 0.7); }
+    .upload-btn { 
+      cursor: pointer; 
+      transition: all 0.3s ease; 
+      display: inline-block;
+      padding: 8px 16px;
+      background-color: #ff8c42;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .upload-btn:hover { 
+      background-color: #ff6b35; 
+      transform: translateY(-2px); 
+      box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+    }
+    .upload-btn:active {
+      transform: translateY(0px);
+    }
+  </style>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;500;600;700&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap">
   {% endblock %}
@@ -23,6 +65,7 @@
   {% block body %}
 
   <!-- Main Content -->
+  <!-- DEBUG: Rendering for user {{ user.username }} (ID: {{ user_id }}) at {{ cache_buster }} -->
   <main class="settings-page">
     <div class="settings-container">
       <!-- Settings Sidebar -->
@@ -54,70 +97,97 @@
         <div class="settings-section active" id="profile">
           <div class="settings-header">
             <h2 class="settings-section-title">Profile Settings</h2>
-            <p class="settings-section-desc">Manage your personal information</p>
+            <p class="settings-section-desc">Manage your personal information for <strong>{{ user.username }}</strong></p>
+            <!-- Security indicator -->
+            <div style="font-size: 0.8em; color: #666; margin-top: 5px;">
+              <i class="fas fa-user-shield"></i> Logged in as: {{ user_full_name }} ({{ user_email }})
+            </div>
           </div>
 
-          <div class="success-message" id="profileSuccess">
+          <!-- Django Messages -->
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }} message-alert">
+                <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-triangle{% endif %}"></i>
+                {{ message }}
+                <button type="button" class="close-message" onclick="this.parentElement.style.display='none'">&times;</button>
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          <div class="success-message" id="profileSuccess" style="display: none;">
             <i class="fas fa-check-circle"></i> Your profile has been updated successfully.
           </div>
 
           <div class="profile-preview">
             <div class="profile-avatar">
-              <img src="{% static 'images/profile.avif' %}" alt="Profile Picture" id="profileImage">
+              {% if profile and profile.profile_pic %}
+                <img src="{{ profile.profile_pic.url }}" alt="Profile Picture" id="profileImage">
+              {% else %}
+                <img src="{% static 'images/profile.avif' %}" alt="Profile Picture" id="profileImage">
+              {% endif %}
               <div class="avatar-upload-overlay">
                 <i class="fas fa-camera"></i>
               </div>
             </div>
             <div class="profile-info">
-              <div class="profile-name" id="displayName">John Smith</div>
-              <div class="profile-email" id="displayEmail">johnsmith@example.com</div>
+              <div class="profile-name" id="displayName">{{ user_full_name }}</div>
+              <div class="profile-email" id="displayEmail">{{ user_email }}</div>
               <div class="profile-status">
-                <span class="client-badge">Client</span>
-                <span class="project-status">Project: <span class="status-ongoing">Ongoing</span></span>
+                <span class="client-badge">{{ profile_role }}</span>
+                <span class="project-status">Project: <span class="status-ongoing">{% if profile.project_name %}{{ profile.project_name }}{% else %}Not Assigned{% endif %}</span></span>
               </div>
-              <label for="avatar-upload" class="upload-btn">
+              <label for="id_profile_pic_debug" class="upload-btn" id="changePhotoBtn">
                 <i class="fas fa-camera"></i> Change Photo
               </label>
-              <input type="file" id="avatar-upload" style="display: none;" accept="image/*">
             </div>
           </div>
 
-          <form id="profileForm">
+          <form id="profileForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
             <div class="form-grid">
               <div class="form-group">
-                <label for="firstName" class="form-label">First Name</label>
-                <input type="text" id="firstName" class="form-input" value="John" required>
+                <label for="id_first_name" class="form-label">First Name</label>
+                {{ form.first_name }}
               </div>
               <div class="form-group">
-                <label for="lastName" class="form-label">Last Name</label>
-                <input type="text" id="lastName" class="form-input" value="Smith" required>
+                <label for="id_last_name" class="form-label">Last Name</label>
+                {{ form.last_name }}
               </div>
               <div class="form-group">
-                <label for="email" class="form-label">Email Address</label>
-                <input type="email" id="email" class="form-input" value="johnsmith@example.com" required>
+                <label for="id_email" class="form-label">Email Address</label>
+                {{ form.email }}
                 <div class="input-error" id="emailError">Please enter a valid email address.</div>
               </div>
               <div class="form-group">
-                <label for="phone" class="form-label">Phone Number</label>
-                <input type="tel" id="phone" class="form-input" value="+1 (555) 123-4567" pattern="[\+]?[(]?[0-9]{1,3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}">
+                <label for="id_phone" class="form-label">Phone Number</label>
+                {{ form.phone }}
                 <div class="input-error" id="phoneError">Please enter a valid phone number.</div>
               </div>
             </div>
 
-            <!-- Client-specific info (read-only) -->
+            <!-- Client-specific info (editable) -->
             <div class="client-info">
               <div class="info-box">
                 <div class="info-group">
-                  <span class="info-label">Assigned Architect:</span>
-                  <span class="info-value">Emma Richards</span>
+                  <label for="id_assigned_architect" class="form-label">Assigned Architect:</label>
+                  {{ form.assigned_architect }}
                 </div>
                 <div class="info-group">
-                  <span class="info-label">Project Name:</span>
-                  <span class="info-value">Modern Villa Renovation</span>
+                  <label for="id_project_name" class="form-label">Project Name:</label>
+                  {{ form.project_name }}
                 </div>
                 <div class="info-group">
-                  <span class="info-label">Project Start:</span>
-                  <span class="info-value">March 15, 2023</span>
+                  <label for="id_project_start" class="form-label">Project Start:</label>
+                  {{ form.project_start }}
+                </div>
+                <div class="info-group" style="position: absolute; left: -9999px; opacity: 0; pointer-events: none;">
+                  {{ form.profile_pic }}
+                </div>
+                
+                <!-- Hidden file input that works with the Change Photo button -->
+                <div class="info-group" style="position: absolute; left: -9999px; opacity: 0;">
+                  <input type="file" name="profile_pic" accept="image/*" class="form-input" id="id_profile_pic_debug">
                 </div>
               </div>
               <a href="projects.html" class="btn btn-primary view-project-btn">
@@ -196,19 +266,23 @@
           <div class="account-info-container">
             <div class="account-info-group">
               <span class="account-info-label">Account Created:</span>
-              <span class="account-info-value">January 5, 2023</span>
+              <span class="account-info-value">{{ account_created }}</span>
             </div>
             <div class="account-info-group">
               <span class="account-info-label">Account Type:</span>
-              <span class="account-info-value">Client Account</span>
+              <span class="account-info-value">{{ profile_role }}</span>
             </div>
             <div class="account-info-group">
               <span class="account-info-label">Account Status:</span>
-              <span class="account-info-value status-active">Active</span>
+              <span class="account-info-value {% if user.is_active %}status-active{% else %}status-inactive{% endif %}">{{ account_status }}</span>
             </div>
             <div class="account-info-group">
               <span class="account-info-label">Last Login:</span>
-              <span class="account-info-value">Today, 2:45 PM</span>
+              <span class="account-info-value">{{ last_login }}</span>
+            </div>
+            <div class="account-info-group">
+              <span class="account-info-label">User ID:</span>
+              <span class="account-info-value">#{{ user_id }}</span>
             </div>
           </div>
 
@@ -237,9 +311,9 @@
           </div>
 
           <div class="account-actions">
-            <button type="button" class="btn btn-secondary" id="logoutBtn">
+            <a href="{% url 'accounts:client_logout' %}" class="btn btn-secondary" id="logoutBtn">
               <i class="fas fa-sign-out-alt"></i> Log Out
-            </button>
+            </a>
             <button type="button" class="btn btn-danger" id="deleteAccountBtn">
               <i class="fas fa-trash-alt"></i> Delete Account
             </button>

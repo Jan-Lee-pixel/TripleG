@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Auth | Triple G BuildHub{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/admincss/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sitecss/modal_messages.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
+    {% include 'client/_modal_messages.html' %}
     <div class="auth-container">
         <div class="auth-sidebar">
             <div class="auth-logo">
@@ -27,6 +29,7 @@
             {% block form_content %}{% endblock %}
         </div>
     </div>
+    <script src="{% static 'js/sitejs/modal_messages.js' %}"></script>
     {% block extra_scripts %}{% endblock %}
 </body>
 </html>
