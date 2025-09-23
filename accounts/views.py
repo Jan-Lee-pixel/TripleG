@@ -1,19 +1,18 @@
-
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.core.exceptions import ValidationError
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
-from .forms import ClientRegisterForm, OTPForm
-from .models import OneTimePassword
-
-# Client Registration with OTP
+from django.utils import timezone
+from datetime import timedelta
+from .forms import ClientRegisterForm, OTPForm, AdminRegisterForm, AdminLoginForm, AdminOTPForm
+from .models import OneTimePassword, AdminProfile, Profile
 @csrf_protect
 @never_cache
 @transaction.atomic
@@ -237,12 +236,246 @@ def client_logout_view(request):
     messages.info(request, "You have been successfully logged out.")
     return redirect('accounts:client_login')
 
-# Admin (placeholder views for now)
-def admin_login_view(request):
-    return render(request, 'admin/login.html')
-
+# Admin Authentication Views
+@csrf_protect
+@never_cache
+@transaction.atomic
 def admin_register_view(request):
-    return render(request, 'admin/register.html')
+    """Admin registration with approval workflow"""
+    if request.method == "POST":
+        form = AdminRegisterForm(request.POST)
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    user = form.save()
+                    
+                    # Create admin profile
+                    admin_profile = AdminProfile.objects.create(
+                        user=user,
+                        admin_role='staff',  # Default role
+                        approval_status='pending'
+                    )
+                    
+                    # Generate OTP for email verification
+                    code = OneTimePassword.generate_code()
+                    OneTimePassword.objects.update_or_create(
+                        user=user,
+                        defaults={"code": code}
+                    )
+                    
+                    # Send verification email
+                    send_mail(
+                        "Verify your Triple G Admin Account",
+                        f"Your admin account verification code is {code}. It will expire in 10 minutes. "
+                        f"After verification, your account will be reviewed for approval.",
+                        settings.DEFAULT_FROM_EMAIL,
+                        [user.email],
+                        fail_silently=False,
+                    )
+                    
+                    messages.success(
+                        request, 
+                        "Admin account created! Please check your email for verification code. "
+                        "Your account will be reviewed for approval after verification."
+                    )
+                    request.session['pending_admin_id'] = user.id
+                    return redirect("accounts:admin_verify_otp")
+                    
+            except Exception as e:
+                messages.error(request, "Error creating admin account. Please try again.")
+                print(f"[ERROR] Admin registration failed: {e}")
+    else:
+        form = AdminRegisterForm()
+    
+    return render(request, 'admin/register.html', {"form": form})
+
+
+@csrf_protect
+@never_cache
+def admin_login_view(request):
+    """Admin login with enhanced security checks"""
+    print(f"[DEBUG] admin_login_view called! Method: {request.method}")
+    print(f"[DEBUG] Request path: {request.path}")
+    print(f"[DEBUG] Request META: {request.META.get('HTTP_HOST', 'No host')}")
+    
+    if request.method == "POST":
+        form = AdminLoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            remember = form.cleaned_data.get('remember', False)
+            
+            # Get client IP for logging
+            client_ip = request.META.get('HTTP_X_FORWARDED_FOR', 
+                                       request.META.get('REMOTE_ADDR', ''))
+            if client_ip:
+                client_ip = client_ip.split(',')[0].strip()
+            
+            try:
+                user = User.objects.get(email=email, is_staff=True)
+                
+                # Check if user has admin profile
+                if not hasattr(user, 'admin_profile'):
+                    messages.error(request, "Invalid admin credentials.")
+                    return render(request, 'admin/custom_admin_login.html', {'form': form})
+                
+                admin_profile = user.admin_profile
+                
+                # Check if account is locked
+                if admin_profile.is_account_locked():
+                    messages.error(request, "Account is temporarily locked. Please try again later.")
+                    return render(request, 'admin/custom_admin_login.html', {'form': form})
+                
+                # Authenticate user
+                auth_user = authenticate(request, username=email, password=password)
+                
+                if auth_user is not None:
+                    # Check if admin can login (approved, active, not suspended)
+                    if admin_profile.can_login():
+                        # Reset failed login attempts
+                        admin_profile.failed_login_attempts = 0
+                        admin_profile.last_login_ip = client_ip
+                        admin_profile.save()
+                        
+                        # Set session expiry based on remember me
+                        if not remember:
+                            request.session.set_expiry(0)  # Session expires when browser closes
+                        
+                        login(request, auth_user)
+                        messages.success(request, f"Welcome back, {auth_user.get_full_name()}!")
+                        
+                        # Redirect to portfolio project management instead of admin dashboard
+                        next_url = request.GET.get('next', 'portfolio:projectmanagement')
+                        return redirect(next_url)
+                    else:
+                        if admin_profile.approval_status == 'pending':
+                            messages.warning(request, "Your admin account is pending approval.")
+                        elif admin_profile.approval_status == 'denied':
+                            messages.error(request, "Your admin account has been denied.")
+                        elif admin_profile.approval_status == 'suspended':
+                            messages.error(request, "Your admin account has been suspended.")
+                        else:
+                            messages.error(request, "Your admin account is not active.")
+                else:
+                    # Invalid password - increment failed attempts
+                    admin_profile.failed_login_attempts += 1
+                    
+                    # Lock account after 5 failed attempts for 30 minutes
+                    if admin_profile.failed_login_attempts >= 5:
+                        admin_profile.account_locked_until = timezone.now() + timedelta(minutes=30)
+                        messages.error(request, "Too many failed attempts. Account locked for 30 minutes.")
+                    else:
+                        remaining = 5 - admin_profile.failed_login_attempts
+                        messages.error(request, f"Invalid credentials. {remaining} attempts remaining.")
+                    
+                    admin_profile.save()
+                    
+            except User.DoesNotExist:
+                messages.error(request, "Invalid admin credentials.")
+                
+    else:
+        form = AdminLoginForm()
+    
+    print(f"[DEBUG] Rendering custom_admin_login.html template")
+    print(f"[DEBUG] Template dirs: {settings.TEMPLATES[0]['DIRS']}")
+    
+    # Try to render with explicit template path to avoid conflicts
+    from django.template.loader import get_template
+    try:
+        template = get_template('admin/custom_admin_login.html')
+        print(f"[DEBUG] Found template: {template.origin.name}")
+    except Exception as e:
+        print(f"[DEBUG] Template error: {e}")
+    
+    return render(request, 'admin/custom_admin_login.html', {'form': form})
+
+
+@csrf_protect
+@never_cache
+@transaction.atomic
+def admin_verify_otp(request):
+    """Admin OTP verification"""
+    user_id = request.session.get('pending_admin_id')
+    if not user_id:
+        messages.error(request, "No pending admin verification found.")
+        return redirect("accounts:admin_register")
+    
+    try:
+        user = User.objects.select_for_update().get(id=user_id, is_staff=True)
+    except User.DoesNotExist:
+        messages.error(request, "Invalid admin verification session.")
+        return redirect("accounts:admin_register")
+    
+    otp_obj = OneTimePassword.objects.filter(user=user).first()
+    
+    if request.method == "POST":
+        form = AdminOTPForm(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data['otp']
+            
+            if otp_obj and otp_obj.code == code and not otp_obj.is_expired():
+                with transaction.atomic():
+                    # Mark user as verified (but still pending approval)
+                    user.is_active = True
+                    user.save()
+                    
+                    # Update admin profile
+                    admin_profile = user.admin_profile
+                    admin_profile.approval_status = 'pending'  # Still needs approval
+                    admin_profile.save()
+                    
+                    otp_obj.delete()
+                    del request.session['pending_admin_id']
+                    
+                messages.success(
+                    request, 
+                    "Email verified successfully! Your admin account is now pending approval. "
+                    "You will be notified by email once approved."
+                )
+                return redirect("accounts:admin_login")
+            else:
+                messages.error(request, "Invalid or expired verification code.")
+    else:
+        form = AdminOTPForm()
+    
+    return render(request, "admin/adminverify_otp.html", {"form": form, "email": user.email})
+
+
+def admin_resend_otp(request):
+    """Resend OTP for admin verification"""
+    user_id = request.session.get('pending_admin_id')
+    if not user_id:
+        return redirect("accounts:admin_register")
+    
+    try:
+        user = User.objects.get(id=user_id, is_staff=True)
+    except User.DoesNotExist:
+        return redirect("accounts:admin_register")
+    
+    code = OneTimePassword.generate_code()
+    OneTimePassword.objects.update_or_create(user=user, defaults={"code": code})
+    
+    try:
+        send_mail(
+            "Resend Admin OTP - Triple G BuildHub",
+            f"Your new admin verification code is {code}. It will expire in 10 minutes.",
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+            fail_silently=False,
+        )
+        messages.success(request, "A new verification code has been sent to your email.")
+    except Exception as e:
+        messages.error(request, "Error sending email. Please try again.")
+    
+    return redirect("accounts:admin_verify_otp")
+
+
+def admin_logout_view(request):
+    """Admin logout"""
+    if request.user.is_authenticated and hasattr(request.user, 'admin_profile'):
+        logout(request)
+        messages.info(request, "You have been successfully logged out from admin panel.")
+    return redirect('accounts:admin_login')
 
 # Sitemanger (placeholder views for now)
 def sitemanger_login_view(request):

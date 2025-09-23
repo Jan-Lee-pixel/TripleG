@@ -139,3 +139,126 @@ class ProfileUpdateForm(forms.ModelForm):
                 else:
                     print(f"[DEBUG] No profile picture uploaded")
         return profile
+
+
+# Admin Authentication Forms
+class AdminRegisterForm(UserCreationForm):
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your email',
+            'id': 'email'
+        })
+    )
+    first_name = forms.CharField(
+        max_length=30, 
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your first name',
+            'id': 'firstName'
+        })
+    )
+    last_name = forms.CharField(
+        max_length=30, 
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your last name',
+            'id': 'lastName'
+        })
+    )
+    terms = forms.BooleanField(
+        required=True,
+        widget=forms.CheckboxInput(attrs={
+            'id': 'terms'
+        }),
+        error_messages={'required': 'You must agree to the Terms of Service and Privacy Policy.'}
+    )
+    
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email', 'password1', 'password2']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Customize password fields
+        self.fields['password1'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Create a password',
+            'id': 'password'
+        })
+        self.fields['password2'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Confirm your password',
+            'id': 'confirmPassword'
+        })
+        
+        # Remove username field (we'll use email as username)
+        if 'username' in self.fields:
+            del self.fields['username']
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("This email is already registered.")
+        return email
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data['email']
+        user.username = self.cleaned_data['email']  # Use email as username
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
+        user.is_active = False  # Inactive until admin approval
+        user.is_staff = True    # Mark as staff for admin access
+        if commit:
+            user.save()
+        return user
+
+
+class AdminLoginForm(forms.Form):
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your email',
+            'id': 'email'
+        })
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your password',
+            'id': 'password'
+        })
+    )
+    remember = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={
+            'id': 'remember'
+        })
+    )
+
+
+class AdminOTPForm(forms.Form):
+    otp = forms.CharField(
+        max_length=6,
+        required=True,
+        label="Verification Code",
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Enter 6-digit code',
+            'class': 'form-control',
+            'maxlength': '6',
+            'pattern': '[0-9]{6}',
+            'autocomplete': 'one-time-code'
+        })
+    )
+    
+    def clean_otp(self):
+        otp = self.cleaned_data.get('otp')
+        if not otp.isdigit() or len(otp) != 6:
+            raise forms.ValidationError("Please enter a valid 6-digit code.")
+        return otp

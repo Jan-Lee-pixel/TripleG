@@ -16,7 +16,7 @@
     </div>
     <ul class="nav-links" id="navLinks">
       <li><a href="{% url 'core:index' %}">Home</a></li>
-      <li><a href="{% url 'blog:blog_list' %}">Blog</a></li>
+      <li><a href="{% url 'blog:bloglist' %}">Blog</a></li>
       <li><a href="{% url 'core:contact' %}">Contact</a></li>
       <li><a href="{% url 'core:about' %}">About Us</a></li>
       {% if not user.is_authenticated %}

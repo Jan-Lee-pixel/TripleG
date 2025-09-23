@@ -388,9 +388,12 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const projectId = this.getAttribute('data-project-id');
             if (projectId) {
-                window.location.href = `project-detail.html?id=${projectId}`;
+                window.location.href = `/portfolio/${projectId}/`;
             } else {
-                window.location.href = 'project-detail.html';
+                // Fallback to first project if available
+                if (projects && projects.length > 0) {
+                    window.location.href = `/portfolio/${projects[0].id}/`;
+                }
             }
         });
     }

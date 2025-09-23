@@ -355,3 +355,92 @@ Protect against brute force & ensure secure delivery.
 
 **Summary:**
 These enhancements will make your authentication system even more robust, user-friendly, and secure for production environments.
+
+
+---
+
+## 📌 Adminside Authentication Plan (`accounts/templates/admin/`)
+
+### 1. **Admin Registration Flow**
+- **User fills out registration form** with first name, last name, email, password, and confirms password.
+- **Terms and Privacy Policy** agreement required.
+- **Password strength meter** and validation.
+- **Form validation** for all fields (frontend + backend).
+- **Upon submission:**
+  - Admin account is created as **inactive** (pending approval by superadmin or system).
+  - Email confirmation is sent (optional: OTP or activation link).
+  - Success modal informs user that registration is pending approval.
+
+### 2. **Admin Login Flow**
+- **User fills out login form** with email and password.
+- **Remember me** option for persistent sessions.
+- **Password visibility toggle** and forgot password link.
+- **Social logins** (Google, Microsoft) as future enhancement (UI present).
+- **Error modal** for invalid credentials.
+- **Only active admin users can log in** (inactive = pending approval or suspended).
+
+### 3. **Email/OTP Verification (Optional/Recommended)**
+- **After registration**, send an OTP or activation link to admin's email.
+- **OTP/activation link** expires after a set time (e.g., 10 minutes).
+- **Verification page** for OTP input or link click.
+- **Upon successful verification:**
+  - Admin account is marked as verified and awaits approval (if required).
+  - OTP is deleted from the database.
+- **Resend OTP** functionality with cooldown to prevent abuse.
+
+### 4. **Admin Approval (Manual or Automated)**
+- **Superadmin reviews pending admin registrations**.
+- **Approve/deny** actions available in the admin dashboard.
+- **Email notification** sent to admin upon approval or denial.
+- **Only approved and verified admins can access admin dashboard.**
+
+### 5. **Security Features**
+- **Password hashing** with Django's built-in mechanisms.
+- **CSRF protection** on all forms.
+- **Rate limiting** for login and OTP verification attempts.
+- **Brute force protection** (recommend `django-axes` or similar).
+- **All sensitive actions require HTTPS**.
+- **Audit logging** for all admin authentication events (login, logout, failed attempts, registration).
+
+### 6. **UI/UX Features**
+- **Professional, branded design** consistent with Triple G BuildHub.
+- **Responsive layout** for desktop and tablet.
+- **Accessible forms** with clear labels, error messages, and ARIA attributes.
+- **Toast/modal notifications** for feedback (success, error, info).
+- **Password strength indicator** and visibility toggle.
+- **Clear guidance** for next steps after registration and login.
+
+### 7. **Database Structure**
+- **Admin users** are stored in the same `auth_user` table, distinguished by `is_staff` and/or `is_superuser`.
+- **Profile extension** (optional): Add admin-specific fields in a related `Profile` or `AdminProfile` model.
+- **OTP table** for email verification if used.
+
+### 8. **URLs & Views**
+- `/accounts/admin/login/` — Login page
+- `/accounts/admin/register/` — Registration page
+- `/accounts/admin/verify-otp/` — OTP/email verification
+- `/accounts/admin/logout/` — Logout
+- **Views**: Use Django CBVs or FBVs with @transaction.atomic, CSRF, and security best practices.
+
+### 9. **Email Configuration**
+- **SMTP settings** for sending OTPs/confirmation emails.
+- **Templated emails** for branding and clarity.
+- **App password or secure credentials** for email backend.
+
+### 10. **Testing & Quality Assurance**
+- **Automated tests** for registration, login, OTP, approval, and edge cases.
+- **Manual testing** for all flows and error scenarios.
+- **Security testing** (rate limiting, brute force, session management).
+
+### 11. **Future Enhancements**
+- **Multi-factor authentication** (MFA) for admin logins.
+- **Admin activity logs** and dashboards.
+- **Role-based permissions** (superadmin, manager, staff).
+- **Single Sign-On (SSO)** integration for enterprise environments.
+- **reCAPTCHA** on registration and login to prevent bots.
+- **SMS-based OTP** as an additional option.
+
+---
+
+**Summary:**  
+This plan ensures the adminside authentication is robust, secure, and user-friendly, matching the standards set for your client-side system. It is ready for production with scalability and future enhancements in mind.

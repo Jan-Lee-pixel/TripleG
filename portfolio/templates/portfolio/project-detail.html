@@ -29,13 +29,13 @@
             <div class="video-overlay"></div>
         </div>
         <div class="back-to-projects">
-            <a href="projects.html"><i class="fas fa-arrow-left"></i> Back to Projects</a>
+            <a href="{% url 'portfolio:project_list' %}"><i class="fas fa-arrow-left"></i> Back to Projects</a>
         </div>
         <div class="project-hero-content">
-            <div class="project-category">RESIDENTIAL</div>
-            <h1>Modern Residential Home</h1>
+            <div class="project-category">{{ project.category.name|upper }}</div>
+            <h1>{{ project.title }}</h1>
             <div class="project-location">
-                <i class="fas fa-map-marker-alt"></i> Manila, Philippines
+                <i class="fas fa-map-marker-alt"></i> {{ project.location }}
             </div>
         </div>
     </section>
@@ -49,41 +49,45 @@
                 <div class="overview-grid">
                     <div class="overview-details">
                         <div class="overview-text">
-                            <p>Contemporary design with sustainable materials and energy-efficient features for a family of four. This project combines modern aesthetics with functional living spaces, utilizing natural light and ventilation to create a comfortable and environmentally friendly home.</p>
-                            
-                            <p>The design incorporates smart home technology, solar panels, and rainwater collection systems, demonstrating our commitment to sustainable building practices while maintaining the highest standards of luxury and comfort.</p>
+                            {{ project.description|linebreaks }}
                         </div>
                         
                         <div class="project-stats">
                             <div class="stat-item">
                                 <div class="stat-label">Completion Date</div>
-                                <div class="stat-value">August 2023</div>
+                                <div class="stat-value">{{ project.completion_date|date:"F Y" }}</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-label">Project Duration</div>
-                                <div class="stat-value">14 Months</div>
+                                <div class="stat-value">{{ project.duration }}</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-label">Lead Architect</div>
-                                <div class="stat-value">Maria Gonzalez</div>
+                                <div class="stat-value">{{ project.lead_architect }}</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-label">Project Status</div>
-                                <div class="stat-value status-completed">Completed</div>
+                                <div class="stat-value status-{{ project.status }}">{{ project.get_status_display }}</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-label">Size</div>
-                                <div class="stat-value">350 m²</div>
+                                <div class="stat-value">{{ project.size }}</div>
                             </div>
+                            {% for stat in project_stats %}
                             <div class="stat-item">
-                                <div class="stat-label">Client</div>
-                                <div class="stat-value">Santos Family</div>
+                                <div class="stat-label">{{ stat.label }}</div>
+                                <div class="stat-value">{{ stat.value }}</div>
                             </div>
+                            {% endfor %}
                         </div>
                     </div>
                     
                     <div class="overview-image">
-                        <img src="{% static 'images/image1.jpg' %}" alt="Project Overview Image">
+                        {% if project.hero_image %}
+                            <img src="{{ project.hero_image.url }}" alt="{{ project.title }} Overview">
+                        {% else %}
+                            <img src="{% static 'images/image1.jpg' %}" alt="{{ project.title }} Overview">
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -95,42 +99,34 @@
                 <h2 class="section-title">Project Gallery</h2>
                 
                 <div class="gallery-grid">
+                    {% for image in project_images %}
                     <div class="gallery-item">
-                        <img src="{% static 'images/image1.jpg' %}" alt="Project Image 1">
+                        <img src="{{ image.image.url }}" alt="{{ image.alt_text }}" onerror="this.src='/static/images/image1.jpg'">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <!-- Fallback images if no gallery images exist -->
+                    <div class="gallery-item">
+                        <img src="{% static 'images/image1.jpg' %}" alt="{{ project.title }} Image 1">
                         <div class="gallery-overlay">
                             <i class="fas fa-search-plus"></i>
                         </div>
                     </div>
                     <div class="gallery-item">
-                        <img src="{% static 'images/image2.jpeg' %}" alt="Project Image 2">
+                        <img src="{% static 'images/image2.jpeg' %}" alt="{{ project.title }} Image 2">
                         <div class="gallery-overlay">
                             <i class="fas fa-search-plus"></i>
                         </div>
                     </div>
                     <div class="gallery-item">
-                        <img src="{% static 'images/image3.jpg' %}" alt="Project Image 3">
+                        <img src="{% static 'images/image3.jpg' %}" alt="{{ project.title }} Image 3">
                         <div class="gallery-overlay">
                             <i class="fas fa-search-plus"></i>
                         </div>
                     </div>
-                    <div class="gallery-item">
-                        <img src="{% static 'images/image4.jpg' %}" alt="Project Image 4">
-                        <div class="gallery-overlay">
-                            <i class="fas fa-search-plus"></i>
-                        </div>
-                    </div>
-                    <div class="gallery-item">
-                        <img src="{% static 'images/image5.jpg' %}" alt="Project Image 5">
-                        <div class="gallery-overlay">
-                            <i class="fas fa-search-plus"></i>
-                        </div>
-                    </div>
-                    <div class="gallery-item">
-                        <img src="{% static 'images/image6.jpg' %}" alt="Project Image 6">
-                        <div class="gallery-overlay">
-                            <i class="fas fa-search-plus"></i>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
             
@@ -153,65 +149,36 @@
                 <h2 class="section-title">Project Timeline</h2>
                 
                 <div class="timeline">
+                    {% for timeline_item in project_timeline %}
+                    <div class="timeline-item {% if timeline_item.completed %}completed{% endif %}">
+                        <div class="timeline-point"></div>
+                        <div class="timeline-content">
+                            <h3>{{ timeline_item.title }}</h3>
+                            <span class="timeline-date">{{ timeline_item.date|date:"F Y" }}</span>
+                            <p>{{ timeline_item.description }}</p>
+                            <div class="progress-bar">
+                          {% if timeline_item.completed %}
+  <div class="progress" style="width: 100%"></div>
+{% else %}
+  <div class="progress" style="width: 0%"></div>
+{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <!-- Fallback timeline if no timeline items exist -->
                     <div class="timeline-item completed">
                         <div class="timeline-point"></div>
                         <div class="timeline-content">
-                            <h3>Planning &amp; Design</h3>
-                            <span class="timeline-date">October 2022</span>
-                            <p>Initial concept development, client consultations, and finalization of architectural plans.</p>
+                            <h3>Project Completed</h3>
+                            <span class="timeline-date">{{ project.completion_date|date:"F Y" }}</span>
+                            <p>This project has been successfully completed and delivered.</p>
                             <div class="progress-bar">
                                 <div class="progress" style="width: 100%"></div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="timeline-item completed">
-                        <div class="timeline-point"></div>
-                        <div class="timeline-content">
-                            <h3>Foundation &amp; Structural Work</h3>
-                            <span class="timeline-date">December 2022</span>
-                            <p>Excavation, foundation pouring, and structural framework completion.</p>
-                            <div class="progress-bar">
-                                <div class="progress" style="width: 100%"></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline-item completed">
-                        <div class="timeline-point"></div>
-                        <div class="timeline-content">
-                            <h3>Enclosure &amp; Utilities</h3>
-                            <span class="timeline-date">February 2023</span>
-                            <p>Exterior walls, roofing, windows, and installation of plumbing and electrical systems.</p>
-                            <div class="progress-bar">
-                                <div class="progress" style="width: 100%"></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline-item completed">
-                        <div class="timeline-point"></div>
-                        <div class="timeline-content">
-                            <h3>Interior Construction</h3>
-                            <span class="timeline-date">May 2023</span>
-                            <p>Interior walls, flooring, cabinetry, and fixture installation.</p>
-                            <div class="progress-bar">
-                                <div class="progress" style="width: 100%"></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline-item completed">
-                        <div class="timeline-point"></div>
-                        <div class="timeline-content">
-                            <h3>Finishing &amp; Handover</h3>
-                            <span class="timeline-date">August 2023</span>
-                            <p>Final touches, quality inspections, and project handover to the client.</p>
-                            <div class="progress-bar">
-                                <div class="progress" style="width: 100%"></div>
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </section>
