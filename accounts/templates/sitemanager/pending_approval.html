@@ -1,0 +1,444 @@
+{% extends "base_auth.html" %}
+{% load static %}
+
+{% block title %}Account Pending Approval - Site Manager{% endblock %}
+
+{% block sidebar_content %}
+    <h1>Almost There!</h1>
+    <p>Your Site Manager account has been successfully created and verified. You're now in the approval queue.</p>
+    <div class="auth-features">
+        <div class="feature"><i class="fas fa-user-check"></i><span>Account verified successfully</span></div>
+        <div class="feature"><i class="fas fa-clock"></i><span>Pending admin approval</span></div>
+        <div class="feature"><i class="fas fa-envelope"></i><span>You'll be notified by email</span></div>
+    </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .pending-container {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: calc(100vh - 100px);
+    }
+    
+    /* Ensure container stays centered on larger screens */
+    @media (min-width: 1200px) {
+        .auth-form-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+    
+    .pending-icon {
+        width: 120px;
+        height: 120px;
+        background: linear-gradient(135deg, #ffc107, #fd7e14);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 2rem;
+        color: white;
+        font-size: 3rem;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    .status-card {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 10px;
+        padding: 2rem;
+        margin: 2rem 0;
+    }
+    
+    .timeline {
+        text-align: left;
+        margin: 2rem 0;
+    }
+    
+    .timeline-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    
+    /* Mobile responsive - single column on smaller screens */
+    @media (max-width: 768px) {
+        .timeline-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .pending-container {
+            padding: 2rem 1.5rem;
+            margin: 1rem;
+            min-height: auto;
+        }
+        
+        .timeline-item {
+            min-height: 120px;
+            padding: 1.25rem 1rem;
+        }
+        
+        .timeline-icon {
+            width: 45px;
+            height: 45px;
+            font-size: 1.3rem;
+        }
+    }
+    
+    /* Tablet responsive - maintain two columns but adjust spacing */
+    @media (min-width: 769px) and (max-width: 1024px) {
+        .timeline-grid {
+            gap: 0.75rem;
+        }
+        
+        .timeline-item {
+            padding: 1.25rem 0.75rem;
+        }
+    }
+    
+    .timeline-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 1.5rem 1rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        position: relative;
+        min-height: 140px;
+        justify-content: center;
+        cursor: default;
+    }
+    
+    .timeline-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    .timeline-item.completed {
+        background: #d4edda;
+        border-left: 4px solid #28a745;
+    }
+    
+    .timeline-item.current {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+    }
+    
+    .timeline-item.pending {
+        background: #f8f9fa;
+        border-left: 4px solid #6c757d;
+        opacity: 0.7;
+    }
+    
+    .timeline-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem auto;
+        font-size: 1.5rem;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .timeline-content {
+        text-align: center;
+    }
+    
+    .timeline-content strong {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+    
+    .timeline-content .text-muted {
+        font-size: 0.85rem;
+        line-height: 1.4;
+    }
+    
+    .timeline-item.completed .timeline-icon {
+        background: #28a745;
+        color: white;
+    }
+    
+    .timeline-item.current .timeline-icon {
+        background: #ffc107;
+        color: white;
+    }
+    
+    .timeline-item.pending .timeline-icon {
+        background: #6c757d;
+        color: white;
+    }
+    
+    .contact-info {
+        background: #e7f3ff;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+    
+    .btn-dashboard {
+        background: linear-gradient(135deg, #6f42c1, #9b59b6);
+        border: none;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+    
+    .btn-dashboard:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(111, 66, 193, 0.3);
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block form_content %}
+<style>
+    /* Base container */
+    .auth-container {
+        display: flex;
+        min-height: 90vh;
+        width: 100%;
+    }
+
+    /* Sidebar styling */
+    .auth-sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 40% !important;
+        background-color: #00273C;
+        color: white;
+        padding: 40px;
+        position: relative;
+        text-align: center;
+    }
+
+    /* Logo */
+    .auth-logo {
+        position: absolute;
+        top: 40px;
+        left: 40px;
+        z-index: 10;
+    }
+
+    /* Main content */
+    .auth-content {
+        max-width: 80%;
+        margin: 0 auto;
+        padding: 40px 0;
+    }
+
+    /* Feature list */
+    .auth-features {
+        margin: 40px 0;
+        text-align: left;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .feature {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 12px 20px;
+        border-radius: 8px;
+    }
+
+    .feature i {
+        font-size: 22px;
+        margin-right: 15px;
+        color: #ff7120d9;
+        min-width: 24px;
+    }
+
+    /* Footer */
+    .auth-footer {
+        position: absolute;
+        bottom: 40px;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+
+    /* Form container */
+    .auth-form-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60%;
+        padding: 40px;
+    }
+
+    .auth-form-wrapper {
+        width: 100%;
+        max-width: 400px;
+    }
+</style>
+<div class="pending-container">
+    <div class="pending-icon">
+        <i class="fas fa-clock"></i>
+    </div>
+    
+    <h2 class="h3 mb-3">Account Pending Approval</h2>
+    <p class="text-muted mb-4">
+        Your Site Manager account has been successfully created and verified. 
+        It's now pending admin approval before you can access the system.
+    </p>
+    
+    <div class="status-card">
+        <h4 class="text-warning mb-3">
+            <i class="fas fa-hourglass-half me-2"></i>
+            Awaiting Admin Review
+        </h4>
+        <p class="mb-0">
+            Our administrators will review your application and approve access to the site management system. 
+            This typically takes 1-2 business days.
+        </p>
+    </div>
+    
+    <div class="timeline">
+        <h5 class="mb-3 text-center">Registration Progress</h5>
+        
+        <div class="timeline-grid">
+            <div class="timeline-item completed">
+                <div class="timeline-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="timeline-content">
+                    <strong>Account Created</strong>
+                    <div class="text-muted small">Your site manager account has been created</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item completed">
+                <div class="timeline-icon">
+                    <i class="fas fa-envelope-check"></i>
+                </div>
+                <div class="timeline-content">
+                    <strong>Email Verified</strong>
+                    <div class="text-muted small">Your email address has been successfully verified</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item current">
+                <div class="timeline-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="timeline-content">
+                    <strong>Admin Approval</strong>
+                    <div class="text-muted small">Waiting for administrator to approve your account</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item pending">
+                <div class="timeline-icon">
+                    <i class="fas fa-door-open"></i>
+                </div>
+                <div class="timeline-content">
+                    <strong>Access Granted</strong>
+                    <div class="text-muted small">You'll be able to access the site management dashboard</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="contact-info">
+        <h5 class="text-primary mb-3">
+            <i class="fas fa-info-circle me-2"></i>
+            What happens next?
+        </h5>
+        <ul class="list-unstyled text-start">
+            <li class="mb-2">
+                <i class="fas fa-envelope text-primary me-2"></i>
+                You'll receive an email notification once your account is approved
+            </li>
+            <li class="mb-2">
+                <i class="fas fa-key text-primary me-2"></i>
+                After approval, you can log in and access the site management features
+            </li>
+            <li class="mb-2">
+                <i class="fas fa-tools text-primary me-2"></i>
+                You'll have access to project management, site diary, and reporting tools
+            </li>
+        </ul>
+    </div>
+    
+    <div class="mt-4">
+        <p class="text-muted mb-3">Need help or have questions?</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="mailto:support@tripleg.com" class="btn btn-outline-primary">
+                <i class="fas fa-envelope me-2"></i>
+                Contact Support
+            </a>
+            <a href="tel:+1234567890" class="btn btn-outline-secondary">
+                <i class="fas fa-phone me-2"></i>
+                Call Us
+            </a>
+        </div>
+    </div>
+    
+    <div class="mt-4 pt-3 border-top">
+        <a href="{% url 'accounts:sitemanager_login' %}" class="btn-dashboard">
+            <i class="fas fa-sign-in-alt me-2"></i>
+            Try Login Again
+        </a>
+        <div class="mt-2">
+            <small class="text-muted">
+                Already approved? Try logging in to access your dashboard
+            </small>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-refresh page every 5 minutes to check for approval
+    setInterval(function() {
+        // You could add an AJAX call here to check approval status
+        // For now, we'll just show a subtle notification
+        console.log('Checking approval status...');
+    }, 300000); // 5 minutes
+    
+    // Add some interactive feedback
+    const contactButtons = document.querySelectorAll('.btn-outline-primary, .btn-outline-secondary');
+    contactButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Track contact attempts (optional analytics)
+            console.log('User contacted support from pending approval page');
+        });
+    });
+});
+</script>
+{% endblock %}

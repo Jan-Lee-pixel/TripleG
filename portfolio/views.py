@@ -3,14 +3,17 @@ from django.db.models import Q, Prefetch
 from django.core.paginator import Paginator
 from django.http import Http404
 from .models import Project, Category, ProjectImage, ProjectStat, ProjectTimeline
+from accounts.decorators import require_admin_role, allow_public_access
 
 # Create your views here.
 
+@require_admin_role
 def projectmanagement(request):
     """Admin project management view"""
     return render(request, 'admin/projectmanagement.html')
 
 
+@allow_public_access
 def project_list(request):
     """Display list of projects with filtering and pagination"""
     # Get filter parameters
@@ -72,6 +75,7 @@ def project_list(request):
     return render(request, 'portfolio/project-list.html', context)
 
 
+@allow_public_access
 def project_detail(request, project_id):
     """Display detailed view of a single project"""
     try:

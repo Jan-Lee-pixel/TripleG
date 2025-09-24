@@ -1,4 +1,5 @@
 {% extends 'base_auth.html' %}
+{% load static %}
 {% block title %}Register | Triple G BuildHub{% endblock %}
 {% block sidebar_content %}
     <h1>Join the BuildHub Network</h1>
@@ -10,12 +11,108 @@
     </div>
 {% endblock %}
 {% block form_content %}
+<style>
+    /* Base container */
+    .auth-container {
+        display: flex;
+        min-height: 90vh;
+        width: 100%;
+    }
+
+    /* Sidebar styling */
+    .auth-sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 40% !important;
+        background-color: #00273C;
+        color: white;
+        padding: 40px;
+        position: relative;
+        text-align: center;
+    }
+
+    /* Logo */
+    .auth-logo {
+        position: absolute;
+        top: 40px;
+        left: 40px;
+        z-index: 10;
+    }
+
+    /* Main content */
+    .auth-content {
+        max-width: 80%;
+        margin: 0 auto;
+        padding: 40px 0;
+    }
+
+    /* Feature list */
+    .auth-features {
+        margin: 40px 0;
+        text-align: left;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .feature {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 12px 20px;
+        border-radius: 8px;
+    }
+
+    .feature i {
+        font-size: 22px;
+        margin-right: 15px;
+        color: #ff7120d9;
+        min-width: 24px;
+    }
+
+    /* Footer */
+    .auth-footer {
+        position: absolute;
+        bottom: 40px;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+
+    /* Form container */
+    .auth-form-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60%;
+        padding: 40px;
+    }
+
+    .auth-form-wrapper {
+        width: 100%;
+        max-width: 400px;
+    }
+</style>
     <div class="auth-form-wrapper register-form-wrapper">
         <div class="auth-form-header">
             <h2>Create an Account</h2>
             <p>Fill in your details to register</p>
         </div>
-        <form id="registerForm" class="auth-form">
+        
+        <!-- Display messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <form id="registerForm" class="auth-form" method="post">
+            {% csrf_token %}
             <div class="form-grid">
                 <div class="form-group">
                     <label for="firstName">First Name <span class="required">*</span></label>
@@ -73,7 +170,7 @@
             <button type="submit" class="btn btn-primary login-btn">Create Account</button>
         </form>
         <div class="auth-form-footer">
-            <p>Already have an account? <a href="{% url 'accounts:login' %}">Sign in</a></p>
+            <p>Already have an account? <a href="{% url 'accounts:sitemanager_login' %}">Sign in</a></p>
         </div>
     </div>
     <!-- Registration Success Modal -->

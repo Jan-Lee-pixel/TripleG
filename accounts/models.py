@@ -32,6 +32,10 @@ class OneTimePassword(models.Model):
 
     def is_expired(self):
         return timezone.now() > self.created_at + timedelta(minutes=10)
+    
+    def can_resend(self):
+        """Check if user can request a new OTP (rate limiting)"""
+        return timezone.now() > self.created_at + timedelta(seconds=60)
 
     @staticmethod
     def generate_code():
@@ -47,6 +51,7 @@ class AdminProfile(models.Model):
         ('manager', 'Project Manager'),
         ('supervisor', 'Site Supervisor'),
         ('staff', 'Staff'),
+        ('site_manager', 'Site Manager'),
     ]
     
     APPROVAL_STATUS = [
@@ -56,7 +61,7 @@ class AdminProfile(models.Model):
         ('suspended', 'Suspended'),
     ]
     
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='admin_profile')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='adminprofile')
     admin_role = models.CharField(max_length=20, choices=ADMIN_ROLES, default='staff')
     approval_status = models.CharField(max_length=20, choices=APPROVAL_STATUS, default='pending')
     department = models.CharField(max_length=100, blank=True, null=True)
@@ -64,6 +69,19 @@ class AdminProfile(models.Model):
     phone = models.CharField(max_length=20, blank=True, null=True)
     emergency_contact = models.CharField(max_length=100, blank=True, null=True)
     hire_date = models.DateField(blank=True, null=True)
+    
+    # Site Manager specific fields
+    company_department = models.CharField(max_length=100, blank=True, null=True)
+    
+    # Blog Creator specific fields
+    writing_experience = models.CharField(max_length=20, blank=True, null=True)
+    portfolio_links = models.TextField(blank=True, null=True)
+    specialization = models.CharField(max_length=200, blank=True, null=True)
+    
+    # Email verification fields
+    email_verified = models.BooleanField(default=False)
+    email_verified_at = models.DateTimeField(blank=True, null=True)
+    
     approved_by = models.ForeignKey(
         User, 
         on_delete=models.SET_NULL, 
@@ -100,6 +118,11 @@ class AdminProfile(models.Model):
             not self.is_account_locked() and
             self.approval_status != 'suspended'
         )
+    
+    def lock_account(self, duration_minutes=30):
+        """Lock account for specified duration"""
+        self.account_locked_until = timezone.now() + timedelta(minutes=duration_minutes)
+        self.save()
 
 
 # 🔔 Signals outside the model class - TEMPORARILY DISABLED

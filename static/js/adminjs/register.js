@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const firstNameInput = document.getElementById('firstName');
     const lastNameInput = document.getElementById('lastName');
     const emailInput = document.getElementById('email');
-    const roleInput = document.getElementById('role');
+    // const roleInput = document.getElementById('role'); // Not used in Site Manager registration
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('confirmPassword');
     const termsCheckbox = document.getElementById('terms');
@@ -57,13 +57,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const firstName = firstNameInput.value.trim();
         const lastName = lastNameInput.value.trim();
         const email = emailInput.value.trim();
-        const role = roleInput.value;
         const password = passwordInput.value;
         const confirmPassword = confirmPasswordInput.value;
         const termsAccepted = termsCheckbox.checked;
         
         // Validate form
-        if (!firstName || !lastName || !email || !role || !password || !confirmPassword) {
+        if (!firstName || !lastName || !email || !password || !confirmPassword) {
             alert('Please fill out all required fields');
             return;
         }
@@ -85,14 +84,13 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // If validation passes, show success modal
-        showSuccessModal();
+        // If validation passes, submit the form
+        registerForm.submit();
     }
     
     // Calculate password strength score (0-4)
     function calculatePasswordStrength(password) {
         let score = 0;
-        
         // Length check
         if (password.length >= 8) {
             score++;

@@ -13,6 +13,7 @@ from django.utils import timezone
 from datetime import timedelta
 from .forms import ClientRegisterForm, OTPForm, AdminRegisterForm, AdminLoginForm, AdminOTPForm
 from .models import OneTimePassword, AdminProfile, Profile
+from .utils import get_user_role, get_user_dashboard_url, get_appropriate_redirect
 @csrf_protect
 @never_cache
 @transaction.atomic
@@ -222,7 +223,11 @@ def client_login_view(request):
                     login(request, user)
                     # The success message will be shown on the home page after redirect
                     messages.success(request, f"Welcome back, {user.first_name}!")
-                    return redirect("core:index")
+                    
+                    # Redirect based on user role
+                    dashboard_url = get_user_dashboard_url(user)
+                    next_url = request.GET.get('next', dashboard_url)
+                    return redirect(next_url)
                 else:
                     messages.warning(request, "Your account isn't active. Please check your email to verify your account.")
             else:
@@ -315,11 +320,11 @@ def admin_login_view(request):
                 user = User.objects.get(email=email, is_staff=True)
                 
                 # Check if user has admin profile
-                if not hasattr(user, 'admin_profile'):
+                if not hasattr(user, 'adminprofile'):
                     messages.error(request, "Invalid admin credentials.")
                     return render(request, 'admin/custom_admin_login.html', {'form': form})
                 
-                admin_profile = user.admin_profile
+                admin_profile = user.adminprofile
                 
                 # Check if account is locked
                 if admin_profile.is_account_locked():
@@ -344,8 +349,9 @@ def admin_login_view(request):
                         login(request, auth_user)
                         messages.success(request, f"Welcome back, {auth_user.get_full_name()}!")
                         
-                        # Redirect to portfolio project management instead of admin dashboard
-                        next_url = request.GET.get('next', 'portfolio:projectmanagement')
+                        # Redirect based on admin role (admin vs site manager)
+                        dashboard_url = get_user_dashboard_url(auth_user)
+                        next_url = request.GET.get('next', dashboard_url)
                         return redirect(next_url)
                     else:
                         if admin_profile.approval_status == 'pending':
@@ -420,7 +426,7 @@ def admin_verify_otp(request):
                     user.save()
                     
                     # Update admin profile
-                    admin_profile = user.admin_profile
+                    admin_profile = user.adminprofile
                     admin_profile.approval_status = 'pending'  # Still needs approval
                     admin_profile.save()
                     
@@ -472,14 +478,244 @@ def admin_resend_otp(request):
 
 def admin_logout_view(request):
     """Admin logout"""
-    if request.user.is_authenticated and hasattr(request.user, 'admin_profile'):
+    if request.user.is_authenticated and hasattr(request.user, 'adminprofile'):
         logout(request)
         messages.info(request, "You have been successfully logged out from admin panel.")
     return redirect('accounts:admin_login')
 
-# Sitemanger (placeholder views for now)
-def sitemanger_login_view(request):
-    return render(request, 'sitemanger/login.html')
+# Site Manager authentication views (handles blog creation)
+@csrf_protect
+@never_cache
+def sitemanager_login_view(request):
+    """Site Manager login view with authentication logic"""
+    print(f"[DEBUG] sitemanager_login_view called - Method: {request.method}")
+    
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        
+        print(f"[DEBUG] Login attempt - Email: {email}, Password length: {len(password) if password else 0}")
+        
+        if not email or not password:
+            print("[DEBUG] Missing email or password")
+            messages.error(request, 'Please enter both email and password.')
+            return render(request, 'sitemanager/login.html')
+        
+        try:
+            # Find user by email
+            user = User.objects.get(email=email)
+            print(f"[DEBUG] Found user: {user.username}, Active: {user.is_active}")
+            
+            # Authenticate user
+            auth_user = authenticate(request, username=user.username, password=password)
+            print(f"[DEBUG] Authentication result: {auth_user}")
+            
+            if auth_user is not None:
+                print(f"[DEBUG] Authentication successful for: {auth_user.username}")
+                
+                # Check if user has admin profile (site manager)
+                if hasattr(auth_user, 'adminprofile'):
+                    admin_profile = auth_user.adminprofile
+                    print(f"[DEBUG] Admin profile found - Role: {admin_profile.admin_role}, Status: {admin_profile.approval_status}")
+                    
+                    # Check if it's a site manager and approved
+                    if admin_profile.admin_role == 'site_manager':
+                        if admin_profile.approval_status == 'approved':
+                            # Login successful
+                            login(request, auth_user)
+                            messages.success(request, f'Welcome back, {auth_user.get_full_name()}!')
+                            print(f"[DEBUG] Login successful, redirecting to dashboard")
+                            
+                            # Redirect to site manager dashboard
+                            from .utils import get_user_role
+                            user_role = get_user_role(auth_user)
+                            print(f"[DEBUG] User role detected: {user_role}")
+                            dashboard_url = get_user_dashboard_url(auth_user)
+                            print(f"[DEBUG] Dashboard URL: {dashboard_url}")
+                            next_url = request.GET.get('next', dashboard_url)
+                            print(f"[DEBUG] Final redirect URL: {next_url}")
+                            return redirect(next_url)
+                        elif admin_profile.approval_status == 'pending':
+                            print(f"[DEBUG] Account pending approval")
+                            messages.warning(request, 'Your account is still pending approval. Please wait for admin approval.')
+                            return redirect('accounts:sitemanager_pending_approval')
+                        elif admin_profile.approval_status == 'denied':
+                            print(f"[DEBUG] Account denied")
+                            messages.error(request, 'Your account has been denied access.')
+                        else:
+                            print(f"[DEBUG] Account suspended")
+                            messages.error(request, 'Your account is suspended.')
+                    else:
+                        print(f"[DEBUG] Not a site manager - Role: {admin_profile.admin_role}")
+                        messages.error(request, 'Invalid credentials for site manager access.')
+                else:
+                    print(f"[DEBUG] No admin profile found")
+                    messages.error(request, 'Invalid credentials for site manager access.')
+            else:
+                print(f"[DEBUG] Authentication failed for user: {user.username}")
+                messages.error(request, 'The email or password you entered is incorrect.')
+                
+        except User.DoesNotExist:
+            print(f"[DEBUG] User not found with email: {email}")
+            messages.error(request, 'The email or password you entered is incorrect.')
+        except Exception as e:
+            print(f"[ERROR] Site manager login error: {e}")
+            messages.error(request, 'An error occurred during login. Please try again.')
+    
+    return render(request, 'sitemanager/login.html')
 
-def sitemanger_register_view(request):
-    return render(request, 'sitemanger/register.html')
+def sitemanager_register_view(request):
+    """Site Manager registration view"""
+    if request.method == 'POST':
+        # Get form data
+        first_name = request.POST.get('firstName')
+        last_name = request.POST.get('lastName')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirmPassword')
+        
+        # Basic validation
+        if not all([first_name, last_name, email, password, confirm_password]):
+            messages.error(request, 'All fields are required.')
+            return render(request, 'sitemanager/register.html')
+        
+        if password != confirm_password:
+            messages.error(request, 'Passwords do not match.')
+            return render(request, 'sitemanager/register.html')
+        
+        # Check if user already exists
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'An account with this email already exists.')
+            return render(request, 'sitemanager/register.html')
+        
+        try:
+            # Create user account
+            user = User.objects.create_user(
+                username=email,
+                email=email,
+                first_name=first_name,
+                last_name=last_name,
+                password=password,
+                is_active=False  # Will be activated after OTP verification
+            )
+            
+            # Create AdminProfile for Site Manager
+            admin_profile = AdminProfile.objects.create(
+                user=user,
+                admin_role='site_manager',
+                approval_status='pending',
+                department='Site Management'
+            )
+            
+            # Generate and send OTP
+            otp_code = OneTimePassword.generate_code()
+            otp_instance, created = OneTimePassword.objects.get_or_create(
+                user=user,
+                defaults={'code': otp_code}
+            )
+            if not created:
+                # Update existing OTP with new code
+                otp_instance.code = otp_code
+                otp_instance.created_at = timezone.now()
+                otp_instance.save()
+            
+            # Send OTP email
+            subject = 'Verify Your Site Manager Account - Triple G BuildHub'
+            message = f'''
+            Hello {first_name},
+            
+            Thank you for registering as a Site Manager with Triple G BuildHub.
+            
+            Your verification code is: {otp_instance.code}
+            
+            This code will expire in 10 minutes.
+            
+            Best regards,
+            Triple G BuildHub Team
+            '''
+            
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+            
+            # Store user ID in session for OTP verification
+            request.session['registration_user_id'] = user.id
+            request.session['registration_email'] = email
+            
+            messages.success(request, 'Registration successful! Please check your email for the verification code.')
+            return redirect('accounts:sitemanager_verify_otp')
+            
+        except Exception as e:
+            messages.error(request, f'Registration failed: {str(e)}')
+            return render(request, 'sitemanager/register.html')
+    
+    return render(request, 'sitemanager/register.html')
+
+def sitemanager_verify_otp(request):
+    """Site Manager OTP verification view"""
+    user_id = request.session.get('registration_user_id')
+    email = request.session.get('registration_email')
+    
+    # Debug: Print session data (remove in production)
+    # print(f"DEBUG: user_id = {user_id}, email = {email}")
+    # print(f"DEBUG: session keys = {list(request.session.keys())}")
+    
+    if not user_id:
+        messages.error(request, 'Session expired. Please register again.')
+        return redirect('accounts:sitemanager_register')
+    
+    if request.method == 'POST':
+        otp_code = request.POST.get('otp')
+        
+        if not otp_code:
+            messages.error(request, 'Please enter the OTP code.')
+            return render(request, 'sitemanager/verify_otp.html', {'email': email})
+        
+        try:
+            user = User.objects.get(id=user_id)
+            otp_instance = OneTimePassword.objects.get(
+                user=user,
+                code=otp_code
+            )
+            
+            if otp_instance.is_expired():
+                messages.error(request, 'OTP has expired. Please request a new one.')
+                return render(request, 'sitemanager/verify_otp.html', {'email': email})
+            
+            # Delete OTP after successful verification
+            otp_instance.delete()
+            
+            # Activate user account
+            user.is_active = True
+            user.save()
+            
+            # Clear session data
+            request.session.pop('registration_user_id', None)
+            request.session.pop('registration_email', None)
+            
+            messages.success(request, 'Email verified successfully! Your account is pending admin approval.')
+            return redirect('accounts:sitemanager_pending_approval')
+            
+        except OneTimePassword.DoesNotExist:
+            messages.error(request, 'Invalid OTP code. Please try again.')
+            return render(request, 'sitemanager/verify_otp.html', {'email': email})
+        except User.DoesNotExist:
+            messages.error(request, 'User not found. Please register again.')
+            return redirect('accounts:sitemanager_register')
+    
+    return render(request, 'sitemanager/verify_otp.html', {'email': email})
+
+def sitemanager_pending_approval(request):
+    """Site Manager pending approval view"""
+    return render(request, 'sitemanager/pending_approval.html')
+
+def sitemanager_logout_view(request):
+    """Site Manager logout"""
+    if request.user.is_authenticated and hasattr(request.user, 'adminprofile'):
+        logout(request)
+        messages.info(request, "You have been successfully logged out.")
+    return redirect('accounts:sitemanager_login')

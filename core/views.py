@@ -6,19 +6,25 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from accounts.models import Profile
 from accounts.forms import ProfileUpdateForm
+from accounts.decorators import allow_public_access, require_public_role
 
+@allow_public_access
 def home(request):
     return render(request, 'core/home.html')
 
+@allow_public_access
 def about(request):
     return render(request, 'core/aboutus.html')
 
+@allow_public_access
 def contact(request):
     return render(request, 'core/contacts.html')
 
+@allow_public_access
 def project(request):
     return render(request, 'core/project.html')
 
+@require_public_role
 @login_required
 @never_cache
 @csrf_protect

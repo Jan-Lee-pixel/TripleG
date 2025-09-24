@@ -23,8 +23,9 @@
       <li><a href="{% url 'accounts:client_login' %}">Log in</a></li>
       {% else %}
       <li><a href="/user">Dashboard</a></li>
-      {% endif %}
       <li><a href="{% url 'core:usersettings' %}" class="active">Settings</a></li>
+      {% endif %}
+     
     </ul>
     <button class="mobile-menu-btn" id="mobileMenuBtn">
       <i class="fas fa-bars"></i>

@@ -35,34 +35,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Handle login form submission
-    function handleLogin(e) {
-        e.preventDefault();
-        
-        // Get field values
-        const email = emailInput.value.trim();
-        const password = passwordInput.value;
-        
-        // Validate form
-        if (!email || !password) {
-            alert('Please fill out all fields');
-            return;
-        }
-        
-        // Simulate login check with different user types for redirection
-        if (email === 'admin@tripleg.com' && password === 'admin123') {
-            // Admin user
-            redirectToAdminDashboard();
-        } else if (email === 'architect@example.com' && password === 'architect123') {
-            // Architect user
-            redirectToArchitectDashboard();
-        } else if (email === 'client@example.com' && password === 'client123') {
-            // Client user
-            redirectToClientDashboard();
-        } else {
-            // Invalid credentials
-            showErrorModal();
-        }
-    }
+    
+    
     
     // Toggle password visibility
     function togglePasswordVisibility() {

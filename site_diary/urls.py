@@ -17,4 +17,5 @@ urlpatterns = [
     path('history/', views.history, name='history'),
     path('reports/', views.reports, name='reports'),
     path('settings/', views.settings, name='settings'),
- ]
+    path('project/<int:project_id>/', views.project_detail, name='project_detail'),
+]
