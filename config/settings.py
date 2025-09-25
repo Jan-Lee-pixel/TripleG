@@ -77,12 +77,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DB', 'tripleg_db'),
-        'USER': os.environ.get('POSTGRES_USER', 'postgres'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'Ernesto!@#'),
-        'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
-        'PORT': os.environ.get('POSTGRES_PORT', '5432'),
+        'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL engine
+        'NAME': 'tripleg_db',                     # database name
+        'USER': 'postgres',                     # database user
+        'PASSWORD': 'admindb123',             # user password
+        'HOST': 'localhost',                        # or IP of the DB server
+        'PORT': '5432',                             # default PostgreSQL port
     }
 }
 
