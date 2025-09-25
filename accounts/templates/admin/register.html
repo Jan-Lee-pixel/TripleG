@@ -2,8 +2,11 @@
 {% load static %}
 {% block title %}Register | Triple G BuildHub{% endblock %}
 {% block sidebar_content %}
+    <div class="sidebar-logo">
+        <img src="{% static 'images/tripleGlogo.jpg' %}" alt="Triple G Buildhub Logo">
+    </div>
     <h1>Join the BuildHub Network</h1>
-    <p>Create an account to access all the features of Triple G BuildHub and streamline your construction project management.</p>
+    <p>Create an account to access all the features of Triple G Buildhub and streamline your construction project management.</p>
     <div class="auth-features">
         <div class="feature"><i class="fas fa-file-alt"></i><span>Generate comprehensive site diaries</span></div>
         <div class="feature"><i class="fas fa-users"></i><span>Collaborate with teams and clients</span></div>
@@ -14,7 +17,6 @@
     <div class="auth-form-wrapper register-form-wrapper">
         <div class="auth-form-header">
             <h2>Create an Account</h2>
-            <p>Fill in your details to register</p>
         </div>
         <form method="POST" class="auth-form">
             {% csrf_token %}

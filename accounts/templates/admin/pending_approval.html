@@ -1,14 +1,14 @@
 {% extends "base_auth.html" %}
 {% load static %}
 
-{% block title %}Account Pending Approval - Site Manager{% endblock %}
+{% block title %}Account Pending Approval - Admin{% endblock %}
 
 {% block sidebar_content %}
     <div class="sidebar-logo">
         <img src="{% static 'images/tripleGlogo.jpg' %}" alt="Triple G BuildHub Logo">
     </div>
     <h1>Almost There!</h1>
-    <p>Your Site Manager account has been successfully created and verified. You're now in the approval queue.</p>
+    <p>Your Admin account has been successfully created and verified. You're now in the approval queue.</p>
     <div class="auth-features">
         <div class="feature"><i class="fas fa-user-check"></i><span>Account verified successfully</span></div>
         <div class="feature"><i class="fas fa-clock"></i><span>Pending admin approval</span></div>
@@ -18,8 +18,8 @@
 
 {% block extra_css %}
 <style>
-/* Site Manager Pending Approval - Compact Layout v2.0 - Override login.css */
-    .auth-form-container .pending-container {
+/* UPDATED: Admin Pending Approval - Compact Layout v3.0 - FORCE REFRESH 2025-09-25 */
+    .auth-form-container .pending-container.admin-pending-v3 {
         max-width: 750px !important;
         margin: 0 auto !important;
         padding: 2.5rem 1.5rem !important;
@@ -55,7 +55,7 @@
     .pending-icon {
         width: 120px;
         height: 120px;
-        background: linear-gradient(135deg, #ffc107, #fd7e14);
+        background: linear-gradient(135deg, #dc3545, #fd7e14);
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -85,7 +85,7 @@
         margin: 2rem 0;
     }
     
-    .pending-container .timeline-grid {
+    .pending-container.admin-pending-v3 .timeline-grid {
         display: grid !important;
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 1rem !important;
@@ -93,7 +93,7 @@
     }
     
     /* Tooltip styles - Override any conflicts */
-    .pending-container .tooltip {
+    .pending-container.admin-pending-v3 .tooltip {
         position: relative !important;
         display: inline-block !important;
         cursor: help !important;
@@ -101,7 +101,7 @@
         margin-left: 0.5rem !important;
     }
     
-    .pending-container .tooltip .tooltiptext {
+    .pending-container.admin-pending-v3 .tooltip .tooltiptext {
         visibility: hidden !important;
         width: 200px !important;
         background-color: #333 !important;
@@ -131,7 +131,7 @@
         border-color: #333 transparent transparent transparent;
     }
     
-    .pending-container .tooltip:hover .tooltiptext {
+    .pending-container.admin-pending-v3 .tooltip:hover .tooltiptext {
         visibility: visible !important;
         opacity: 1 !important;
     }
@@ -140,38 +140,83 @@
     @media (max-width: 768px) {
         .timeline-grid {
             grid-template-columns: 1fr;
+            gap: 1.5rem;
         }
         
         .pending-container {
             padding: 2rem 1.5rem;
             margin: 1rem;
             min-height: auto;
+            max-width: 95%;
         }
         
         .timeline-item {
-            min-height: 120px;
-            padding: 1.25rem 1rem;
+            min-height: 180px;
+            padding: 2rem 1.5rem;
+            text-align: center;
         }
         
         .timeline-icon {
-            width: 45px;
-            height: 45px;
-            font-size: 1.3rem;
+            width: 50px;
+            height: 50px;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+        
+        .timeline-content strong {
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .timeline-content .text-muted {
+            font-size: 0.85rem;
+            line-height: 1.4;
+            padding: 0;
         }
     }
     
     /* Tablet responsive - maintain two columns but adjust spacing */
     @media (min-width: 769px) and (max-width: 1024px) {
         .timeline-grid {
-            gap: 0.75rem;
+            gap: 1.25rem;
         }
         
         .timeline-item {
-            padding: 1.25rem 0.75rem;
+            padding: 1.5rem 1rem;
+            min-height: 180px;
         }
     }
     
-    .pending-container .timeline-item {
+    /* Large screens - ensure proper spacing */
+    @media (min-width: 1025px) {
+        .timeline-grid {
+            gap: 2rem;
+        }
+        
+        .timeline-item {
+            min-height: 220px;
+            padding: 2rem 1.5rem;
+        }
+        
+        .pending-container {
+            max-width: 900px;
+            padding: 4rem 3rem;
+        }
+    }
+    
+    /* Extra large screens */
+    @media (min-width: 1200px) {
+        .timeline-grid {
+            gap: 2.5rem;
+        }
+        
+        .timeline-item {
+            min-height: 240px;
+            padding: 2.5rem 2rem;
+        }
+    }
+    
+    .pending-container.admin-pending-v3 .timeline-item {
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
@@ -280,7 +325,7 @@
     }
     
     .btn-dashboard {
-        background: linear-gradient(135deg, #6f42c1, #9b59b6);
+        background: linear-gradient(135deg, #dc3545, #fd7e14);
         border: none;
         color: white;
         padding: 1rem 2rem;
@@ -294,31 +339,31 @@
     
     .btn-dashboard:hover {
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(111, 66, 193, 0.3);
+        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
         color: white;
     }
     
     /* Compact bullet list styles */
-    .compact-list {
-        list-style: none;
-        padding: 0;
-        margin: 1rem 0;
-        text-align: left;
+    .pending-container.admin-pending-v3 .compact-list {
+        list-style: none !important;
+        padding: 0 !important;
+        margin: 1rem 0 !important;
+        text-align: left !important;
     }
     
-    .compact-list li {
-        display: flex;
-        align-items: center;
-        margin-bottom: 0.75rem;
-        font-size: 0.9rem;
-        line-height: 1.4;
+    .pending-container.admin-pending-v3 .compact-list li {
+        display: flex !important;
+        align-items: center !important;
+        margin-bottom: 0.75rem !important;
+        font-size: 0.9rem !important;
+        line-height: 1.4 !important;
     }
     
-    .compact-list li i {
-        margin-right: 0.75rem;
-        width: 20px;
-        text-align: center;
-        color: #007bff;
+    .pending-container.admin-pending-v3 .compact-list li i {
+        margin-right: 0.75rem !important;
+        width: 20px !important;
+        text-align: center !important;
+        color: #007bff !important;
     }
     
     .status-card-compact {
@@ -339,92 +384,33 @@
 
 {% block form_content %}
 
-<div class="pending-container">
+<div class="pending-container admin-pending-v3">
+    
     <div class="pending-icon">
-        <i class="fas fa-clock"></i>
+        <i class="fas fa-user-shield"></i>
     </div>
     
-    <h2 class="h3 mb-3">Site Manager Account Pending Approval</h2>
+    <h2 class="h3 mb-3">Admin Account Pending Approval</h2>
     <p class="text-muted mb-4">
-        Your Site Manager account has been successfully created and verified. 
+        Your Admin account has been successfully created and verified. 
         <span class="tooltip">
             <i class="fas fa-info-circle"></i>
-            <span class="tooltiptext">It's now pending admin approval before you can access the site management system.</span>
+            <span class="tooltiptext">It's now pending super admin approval before you can access the administrative system.</span>
         </span>
     </p>
     
     <div class="status-card-compact">
         <h4 class="text-warning mb-3">
             <i class="fas fa-hourglass-half me-2"></i>
-            Awaiting Admin Review
+            Awaiting Super Admin Review
             <span class="tooltip">
                 <i class="fas fa-question-circle"></i>
-                <span class="tooltiptext">Our administrators will review your application and approve access to the site management system. This typically takes 1-2 business days.</span>
+                <span class="tooltiptext">Our super administrators will review your application and approve access to the admin management system. This typically takes 1-2 business days for security verification.</span>
             </span>
         </h4>
     </div>
     
-    <div class="timeline">
-        <h5 class="mb-3 text-center">Registration Progress</h5>
-        
-        <div class="timeline-grid">
-            <div class="timeline-item completed">
-                <div class="timeline-icon">
-                    <i class="fas fa-check"></i>
-                </div>
-                <div class="timeline-content">
-                    <strong>Account Created 
-                        <span class="tooltip">
-                            <i class="fas fa-info-circle"></i>
-                            <span class="tooltiptext">Your site manager account has been created</span>
-                        </span>
-                    </strong>
-                </div>
-            </div>
-            
-            <div class="timeline-item completed">
-                <div class="timeline-icon">
-                    <i class="fas fa-envelope-check"></i>
-                </div>
-                <div class="timeline-content">
-                    <strong>Email Verified
-                        <span class="tooltip">
-                            <i class="fas fa-info-circle"></i>
-                            <span class="tooltiptext">Your email address has been successfully verified</span>
-                        </span>
-                    </strong>
-                </div>
-            </div>
-            
-            <div class="timeline-item current">
-                <div class="timeline-icon">
-                    <i class="fas fa-user-check"></i>
-                </div>
-                <div class="timeline-content">
-                    <strong>Admin Approval
-                        <span class="tooltip">
-                            <i class="fas fa-info-circle"></i>
-                            <span class="tooltiptext">Waiting for administrator to approve your account</span>
-                        </span>
-                    </strong>
-                </div>
-            </div>
-            
-            <div class="timeline-item pending">
-                <div class="timeline-icon">
-                    <i class="fas fa-door-open"></i>
-                </div>
-                <div class="timeline-content">
-                    <strong>Access Granted
-                        <span class="tooltip">
-                            <i class="fas fa-info-circle"></i>
-                            <span class="tooltiptext">You'll be able to access the site management dashboard</span>
-                        </span>
-                    </strong>
-                </div>
-            </div>
-        </div>
-    </div>
+    
     
     <div class="contact-info">
         <h5 class="text-primary mb-3">
@@ -438,11 +424,11 @@
             </li>
             <li>
                 <i class="fas fa-key"></i>
-                Log in and access site management
+                Log in and access admin management
             </li>
             <li>
-                <i class="fas fa-tools"></i>
-                Access to project management, site diary, and reporting tools
+                <i class="fas fa-cogs"></i>
+                Access to user management, system settings, and tools
             </li>
         </ul>
     </div>
@@ -450,9 +436,9 @@
     <div class="mt-4">
         <p class="text-muted mb-3">Need help or have questions?</p>
         <div class="d-flex justify-content-center gap-3 flex-wrap">
-            <a href="mailto:support@tripleg.com" class="btn btn-outline-primary">
+            <a href="mailto:admin@tripleg.com" class="btn btn-outline-primary">
                 <i class="fas fa-envelope me-2"></i>
-                Contact Support
+                Contact Admin Support
             </a>
             <a href="tel:+1234567890" class="btn btn-outline-secondary">
                 <i class="fas fa-phone me-2"></i>
@@ -462,13 +448,13 @@
     </div>
     
     <div class="mt-4 pt-3 border-top">
-        <a href="{% url 'accounts:sitemanager_login' %}" class="btn-dashboard">
+        <a href="{% url 'accounts:admin_login' %}" class="btn-dashboard">
             <i class="fas fa-sign-in-alt me-2"></i>
             Try Login Again
         </a>
         <div class="mt-2">
             <small class="text-muted">
-                Already approved? Try logging in to access your dashboard
+                Already approved? Try logging in to access your admin dashboard
             </small>
         </div>
     </div>
@@ -482,7 +468,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(function() {
         // You could add an AJAX call here to check approval status
         // For now, we'll just show a subtle notification
-        console.log('Checking approval status...');
+        console.log('Checking admin approval status...');
     }, 300000); // 5 minutes
     
     // Add some interactive feedback
@@ -490,7 +476,7 @@ document.addEventListener('DOMContentLoaded', function() {
     contactButtons.forEach(button => {
         button.addEventListener('click', function() {
             // Track contact attempts (optional analytics)
-            console.log('User contacted support from pending approval page');
+            console.log('Admin user contacted support from pending approval page');
         });
     });
 });

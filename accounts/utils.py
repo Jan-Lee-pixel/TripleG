@@ -5,8 +5,175 @@ import logging
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.conf import settings
 
 logger = logging.getLogger('security')
+
+def send_admin_approval_email(profile, approved_by_user):
+    """
+    Send approval email to admin/site manager based on their profile type.
+    
+    Args:
+        profile: AdminProfile or SiteManagerProfile instance
+        approved_by_user: User who approved the account
+        
+    Returns:
+        bool: True if email sent successfully, False otherwise
+    """
+    user = profile.user
+    
+    try:
+        # Check if it's a SiteManagerProfile or AdminProfile with site_manager role
+        if profile.__class__.__name__ == 'SiteManagerProfile' or (hasattr(profile, 'admin_role') and profile.admin_role == 'site_manager'):
+            # Site Manager approval email
+            subject = 'Site Manager Account Approved - Triple G BuildHub'
+            login_url = 'http://127.0.0.1:8000/accounts/sitemanager/login/'
+            role_features = '''- Create and manage site diaries
+- Collaborate with teams and clients
+- Access all construction project management tools'''
+            role_title = 'Site Manager'
+        else:
+            # Admin approval email
+            subject = 'Admin Account Approved - Triple G BuildHub'
+            login_url = 'http://127.0.0.1:8000/accounts/admin-auth/login/'
+            role_features = '''- Full system administration access
+- Manage users and permissions
+- Access all administrative features
+- Oversee project management and reporting'''
+            role_title = profile.get_admin_role_display() if hasattr(profile, 'get_admin_role_display') else 'Admin'
+        
+        message = f'''
+Hello {user.first_name},
+
+Great news! Your {role_title} account has been approved by our admin team.
+
+You can now log in to your account and start using Triple G BuildHub's features:
+{role_features}
+
+Login URL: {login_url}
+
+Your login credentials:
+- Email: {user.email}
+- Password: [Use the password you created during registration]
+
+Welcome to Triple G BuildHub!
+
+Best regards,
+Triple G BuildHub Team
+        '''
+        
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+            fail_silently=False,
+        )
+        return True
+        
+    except Exception as e:
+        print(f"Failed to send approval email to {user.email}: {str(e)}")
+        return False
+
+def send_admin_denial_email(profile):
+    """
+    Send denial email to admin/site manager based on their profile type.
+    
+    Args:
+        profile: AdminProfile or SiteManagerProfile instance
+        
+    Returns:
+        bool: True if email sent successfully, False otherwise
+    """
+    user = profile.user
+    
+    try:
+        if profile.__class__.__name__ == 'SiteManagerProfile' or (hasattr(profile, 'admin_role') and profile.admin_role == 'site_manager'):
+            subject = 'Site Manager Account Application Update - Triple G BuildHub'
+            role_title = 'Site Manager'
+        else:
+            subject = 'Admin Account Application Update - Triple G BuildHub'
+            role_title = profile.get_admin_role_display() if hasattr(profile, 'get_admin_role_display') else 'Admin'
+        
+        message = f'''
+Hello {user.first_name},
+
+Thank you for your interest in becoming a {role_title} with Triple G BuildHub.
+
+After reviewing your application, we are unable to approve your account at this time. This could be due to various reasons such as incomplete information or current capacity limitations.
+
+If you believe this is an error or would like to reapply in the future, please contact our support team.
+
+Thank you for your understanding.
+
+Best regards,
+Triple G BuildHub Team
+        '''
+        
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+            fail_silently=False,
+        )
+        return True
+        
+    except Exception as e:
+        print(f"Failed to send denial email to {user.email}: {str(e)}")
+        return False
+
+def send_admin_suspension_email(profile):
+    """
+    Send suspension email to admin/site manager based on their profile type.
+    
+    Args:
+        profile: AdminProfile or SiteManagerProfile instance
+        
+    Returns:
+        bool: True if email sent successfully, False otherwise
+    """
+    user = profile.user
+    
+    try:
+        if profile.__class__.__name__ == 'SiteManagerProfile' or (hasattr(profile, 'admin_role') and profile.admin_role == 'site_manager'):
+            subject = 'Site Manager Account Suspended - Triple G BuildHub'
+            role_title = 'Site Manager'
+        else:
+            subject = 'Admin Account Suspended - Triple G BuildHub'
+            role_title = profile.get_admin_role_display() if hasattr(profile, 'get_admin_role_display') else 'Admin'
+        
+        message = f'''
+Hello {user.first_name},
+
+We are writing to inform you that your {role_title} account with Triple G BuildHub has been suspended.
+
+This action may have been taken due to:
+- Violation of terms of service
+- Security concerns
+- Administrative review requirements
+
+Your account access has been temporarily disabled. If you believe this is an error or would like to appeal this decision, please contact our support team immediately.
+
+Contact Support: support@tripleg.com
+
+Best regards,
+Triple G BuildHub Team
+        '''
+        
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+            fail_silently=False,
+        )
+        return True
+        
+    except Exception as e:
+        print(f"Failed to send suspension email to {user.email}: {str(e)}")
+        return False
 
 def get_user_role(user):
     """
@@ -22,16 +189,16 @@ def get_user_role(user):
     if user.is_superuser:
         return 'superadmin'
     
+    # Check for SiteManagerProfile first
+    if hasattr(user, 'sitemanagerprofile') and user.sitemanagerprofile.can_login():
+        return 'site_manager'
+    
     # Check for AdminProfile
     if hasattr(user, 'adminprofile') and user.adminprofile.can_login():
         admin_role = user.adminprofile.admin_role
         
-        # Site Manager (site_manager role)
-        if admin_role == 'site_manager':
-            return 'site_manager'
-        
-        # Admin (admin, manager, staff roles)
-        elif admin_role in ['admin', 'manager', 'staff']:
+        # Admin (admin, manager, staff roles) - no longer includes site_manager
+        if admin_role in ['admin', 'manager', 'staff']:
             return 'admin'
     
     # Regular authenticated user (public/client)

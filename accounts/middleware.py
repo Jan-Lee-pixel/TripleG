@@ -56,11 +56,11 @@ class RoleBasedAccessMiddleware(MiddlewareMixin):
             return 'superadmin'
         
         # Check for AdminProfile
-        if hasattr(user, 'admin_profile') and user.admin_profile.can_login():
-            admin_role = user.admin_profile.admin_role
+        if hasattr(user, 'adminprofile') and user.adminprofile.can_login():
+            admin_role = user.adminprofile.admin_role
             
-            # Site Manager (supervisor role)
-            if admin_role == 'supervisor':
+            # Site Manager (site_manager role)
+            if admin_role == 'site_manager':
                 return 'site_manager'
             
             # Admin (admin, manager, staff roles)

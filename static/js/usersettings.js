@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const emailError = document.getElementById('emailError');
   const phoneInput = document.getElementById('id_phone');
   const phoneError = document.getElementById('phoneError');
-  const profileSuccess = document.getElementById('profileSuccess');
 
   if (profileForm) {
     // Email validation

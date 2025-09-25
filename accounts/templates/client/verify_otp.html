@@ -45,4 +45,79 @@
 {% endblock %}
 {% block extra_scripts %}
     <script src="{% static 'js/adminjs/login.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle form submission to set success flag
+            const form = document.querySelector('.auth-form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    // Let the form submit normally, but set a flag for success modal
+                    sessionStorage.setItem('show_success_modal', 'true');
+                });
+            }
+        });
+        
+        function showCustomModal(type, title, message) {
+            // Create modal HTML
+            const modalHTML = `
+                <div id="customModalOverlay" class="custom-modal-overlay" role="dialog" aria-modal="true">
+                    <div class="custom-modal-content">
+                        <button class="custom-modal-close" aria-label="Close modal">&times;</button>
+                        <div class="custom-modal-body custom-alert-${type}">
+                            <div class="custom-modal-icon">
+                                ${type === 'success' ? '<i class="lni lni-checkmark-circle"></i>' : 
+                                  type === 'info' ? '<i class="lni lni-information"></i>' : 
+                                  type === 'warning' ? '<i class="lni lni-warning"></i>' : 
+                                  '<i class="lni lni-cross-circle"></i>'}
+                            </div>
+                            <div class="custom-modal-text">
+                                <h3>${title}</h3>
+                                <p>${message}</p>
+                            </div>
+                            <div class="custom-modal-actions">
+                                <button type="button" class="custom-btn-cancel">Cancel</button>
+                                <button type="button" class="custom-btn-confirm">Confirm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Remove existing modal if any
+            const existingModal = document.getElementById('customModalOverlay');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // Add modal to body
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            // Show modal
+            const modal = document.getElementById('customModalOverlay');
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.classList.add('custom-visible');
+            }, 10);
+            
+            // Add event listeners
+            const closeBtn = modal.querySelector('.custom-modal-close');
+            const cancelBtn = modal.querySelector('.custom-btn-cancel');
+            const confirmBtn = modal.querySelector('.custom-btn-confirm');
+            
+            function hideModal() {
+                modal.classList.add('custom-fade-out');
+                modal.classList.remove('custom-visible');
+                setTimeout(() => {
+                    modal.remove();
+                }, 400);
+            }
+            
+            closeBtn.addEventListener('click', hideModal);
+            cancelBtn.addEventListener('click', hideModal);
+            confirmBtn.addEventListener('click', hideModal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) hideModal();
+            });
+        }
+    </script>
 {% endblock %}

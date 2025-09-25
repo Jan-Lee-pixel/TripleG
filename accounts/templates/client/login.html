@@ -55,7 +55,7 @@
   </div>
   
   <div class="form-container register-container">
-    <form method="POST" action="" autocomplete="on">
+    <form method="POST" action="" autocomplete="on" id="registerForm">
       <h1>Register Here.</h1>
       {% csrf_token %}
       <input type="text" id="register-firstname" name="first_name" placeholder="Firstname" required />
@@ -99,5 +99,83 @@
 </div>
 <script src="{% static 'js/register.js' %}"></script>
 <script src="{% static 'js/sitejs/modal_messages.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if we should show the success modal after OTP verification
+    if (sessionStorage.getItem('show_success_modal') === 'true') {
+        sessionStorage.removeItem('show_success_modal');
+        
+        // Wait a bit for the page to load, then show the success modal
+        setTimeout(() => {
+            showCustomModal('success', 'Success', 'Account verified! You can now log in.');
+        }, 500);
+    }
+    
+    // No need for complex registration handling - let the server handle it normally
+});
+
+function showCustomModal(type, title, message) {
+    // Create modal HTML
+    const modalHTML = `
+        <div id="customModalOverlay" class="custom-modal-overlay" role="dialog" aria-modal="true">
+            <div class="custom-modal-content">
+                <button class="custom-modal-close" aria-label="Close modal">&times;</button>
+                <div class="custom-modal-body custom-alert-${type}">
+                    <div class="custom-modal-icon">
+                        ${type === 'success' ? '<i class="lni lni-checkmark-circle"></i>' : 
+                          type === 'info' ? '<i class="lni lni-information"></i>' : 
+                          type === 'warning' ? '<i class="lni lni-warning"></i>' : 
+                          '<i class="lni lni-cross-circle"></i>'}
+                    </div>
+                    <div class="custom-modal-text">
+                        <h3>${title}</h3>
+                        <p>${message}</p>
+                    </div>
+                    <div class="custom-modal-actions">
+                        <button type="button" class="custom-btn-cancel">Cancel</button>
+                        <button type="button" class="custom-btn-confirm">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remove existing modal if any
+    const existingModal = document.getElementById('customModalOverlay');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Add modal to body
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    // Show modal
+    const modal = document.getElementById('customModalOverlay');
+    modal.style.display = 'flex';
+    setTimeout(() => {
+        modal.classList.add('custom-visible');
+    }, 10);
+    
+    // Add event listeners
+    const closeBtn = modal.querySelector('.custom-modal-close');
+    const cancelBtn = modal.querySelector('.custom-btn-cancel');
+    const confirmBtn = modal.querySelector('.custom-btn-confirm');
+    
+    function hideModal() {
+        modal.classList.add('custom-fade-out');
+        modal.classList.remove('custom-visible');
+        setTimeout(() => {
+            modal.remove();
+        }, 400);
+    }
+    
+    closeBtn.addEventListener('click', hideModal);
+    cancelBtn.addEventListener('click', hideModal);
+    confirmBtn.addEventListener('click', hideModal);
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) hideModal();
+    });
+}
+</script>
 </body>
 </html>

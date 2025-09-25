@@ -9,7 +9,7 @@
 }
 
 body {
-    background-color: #f8f9fa;
+    background-color: #e6e6e6;
     height: 100vh;
     display: flex;
     align-items: center;
@@ -39,9 +39,10 @@ body {
     padding: 40px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     flex-shrink: 0;
     min-height: 100%;
+    gap: 20px;
 }
 
 .auth-logo {
@@ -50,31 +51,43 @@ body {
     margin-bottom: 40px;
 }
 
-.logo {
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
-    object-fit: contain;
+.auth-sidebar .auth-content h1 {
+    font-size: 32px;
+    margin-bottom: 20px ;
+    line-height: 1.6;
+   
 }
-
-.logo-text {
-    font-size: 30px;
-    font-weight: 700;
-    letter-spacing: 1px;
+h1{
+    text-align: center;
 }
 
 .logo-text span {
     color: rgba(255, 113, 32, 0.85);
 }
 
-.auth-sidebar .auth-content h1 {
-    font-size: 32px;
-    margin-bottom: 20px;
-    line-height: 1.2;
-    color: white;
+.sidebar-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    width: 100%;
 }
 
-.auth-sidebar .auth-content p {
+.sidebar-logo img {
+    width: 120px;
+    height: 120px;
+    border-radius: 120px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
+    border: 3px solid rgba(255, 113, 32, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.sidebar-logo img:hover {
+    transform: scale(1.05);
+}
+
+.auth-sidebar .auth-content h1 {
     color: #e0e0e0;
     margin-bottom: 40px;
     line-height: 1.6;
@@ -140,20 +153,20 @@ body {
 
 .auth-form-wrapper {
     width: 100%;
-    max-width: 500px;
+    max-width: 550px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 20px;
+    padding: 10px;
     background: transparent;
     border: none;
     box-shadow: none;
 }
 
 .register-form-wrapper {
-    max-width: 500px;
+    max-width: 550px;
 }
 
 .auth-form-header {
@@ -205,47 +218,54 @@ body {
     color: #555;
     font-size: 13px;
 }
-
 .input-with-icon {
     position: relative;
     width: 100%;
 }
 
+/* Left-side icons (like lock, user, etc.) */
 .input-with-icon i:not(.select-arrow) {
     position: absolute;
-    left: 10px;
+    left: 12px;
     top: 50%;
     transform: translateY(-50%);
     color: #757575;
     z-index: 2;
-    font-size: 14px;
+    font-size: 16px;
+    line-height: 1;
+    pointer-events: none; /* don't block typing */
 }
 
+/* Right-side arrow (for selects) */
 .select-arrow {
     position: absolute;
-    right: 10px;
+    right: 12px;
     top: 50%;
     transform: translateY(-50%);
     color: #757575;
     pointer-events: none;
     z-index: 2;
     font-size: 14px;
+    line-height: 1;
 }
 
+/* Inputs & selects */
 .input-with-icon input,
 .input-with-icon select {
-    width: 100%;
-    padding: 10px 10px 10px 35px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
-    height: 42px;
-    transition: border-color 0.3s;
+    width: 106%;
+    padding: 10px 40px 10px 40px; /* space on left & right for icons */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    height: 44px;
+    transition: all 0.3s ease;
     background-color: #fff;
     position: relative;
     z-index: 1;
+    box-sizing: border-box;
 }
 
+/* Focus state */
 .input-with-icon input:focus,
 .input-with-icon select:focus {
     border-color: #00273C;
@@ -253,18 +273,20 @@ body {
     box-shadow: 0 0 0 2px rgba(0, 39, 60, 0.1);
 }
 
+/* Password toggle (eye icon) */
 .password-toggle {
     position: absolute;
-    right: 10px;
+    right: 12px;   /* sits inside the field */
     top: 50%;
     transform: translateY(-50%);
     background: none;
     border: none;
     color: #757575;
     cursor: pointer;
-    z-index: 3;
-    padding: 3px;
-    font-size: 14px;
+    font-size: 16px;
+    padding: 0;
+    line-height: 1;
+    z-index: 3; /* ensures it's above input */
 }
 
 .password-toggle:hover {
@@ -282,7 +304,7 @@ body {
 .checkbox-container {
     display: flex;
     align-items: flex-start;
-    width: 100%;
+    width: 75%;
 }
 
 .checkbox-container input[type="checkbox"] {
@@ -663,16 +685,15 @@ body {
         background-color: #00273C;
     }
     
-    .auth-sidebar * {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
+    .sidebar-logo img {
+        width: 80px;
+        height: 80px;
+        border-radius: 15px;
     }
     
     .auth-sidebar .auth-content h1 {
         color: white !important;
         font-size: 24px !important;
-        margin-bottom: 12px !important;
         line-height: 1.3 !important;
     }
     
@@ -732,6 +753,12 @@ body {
     
     .auth-sidebar .auth-content {
         display: block !important;
+    }
+    
+    .sidebar-logo img {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
     }
     
     .auth-sidebar .auth-content h1 {

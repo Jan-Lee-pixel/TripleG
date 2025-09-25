@@ -34,6 +34,17 @@
 | http://127.0.0.1:8000/blog/ | Blog - Company blog | ✅ Working |
 | http://127.0.0.1:8000/chat/ | Chat - Message center | ✅ Working |
 
+
+## 📝 client Approval Workflow
+
+### For New Admin Users:
+1. Register → http://127.0.0.1:8000/accounts/admin-auth/register/
+2. Verify Email → http://127.0.0.1:8000/accounts/admin-auth/verify-otp/
+3. Get Approved → Use Django Admin at http://127.0.0.1:8000/admin/
+4. Login → http://127.0.0.1:8000/accounts/admin-auth/login/
+5. Access Dashboard → Redirects to http://127.0.0.1:8000/portfolio/projectmanagement/
+
+
 ## 📝 Admin Approval Workflow
 
 ### For New Admin Users:

@@ -4,6 +4,9 @@
 {% block title %}Verify Email - Site Manager{% endblock %}
 
 {% block sidebar_content %}
+    <div class="sidebar-logo">
+        <img src="{% static 'images/tripleGlogo.jpg' %}" alt="Triple G BuildHub Logo">
+    </div>
     <h1>Email Verification</h1>
     <p>Please check your email and enter the 6-digit verification code to activate your Site Manager account.</p>
     <div class="auth-features">
@@ -99,90 +102,7 @@
 {% endblock %}
 
 {% block form_content %}
-<style>
-    /* Base container */
-    .auth-container {
-        display: flex;
-        min-height: 90vh;
-        width: 100%;
-    }
 
-    /* Sidebar styling */
-    .auth-sidebar {
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: center !important;
-        align-items: center !important;
-        width: 40% !important;
-        background-color: #00273C;
-        color: white;
-        padding: 40px;
-        position: relative;
-        text-align: center;
-    }
-
-    /* Logo */
-    .auth-logo {
-        position: absolute;
-        top: 40px;
-        left: 40px;
-        z-index: 10;
-    }
-
-    /* Main content */
-    .auth-content {
-        max-width: 80%;
-        margin: 0 auto;
-        padding: 40px 0;
-    }
-
-    /* Feature list */
-    .auth-features {
-        margin: 40px 0;
-        text-align: left;
-        width: 100%;
-        max-width: 400px;
-    }
-
-    .feature {
-        display: flex;
-        align-items: center;
-        margin-bottom: 20px;
-        background: rgba(255, 255, 255, 0.1);
-        padding: 12px 20px;
-        border-radius: 8px;
-    }
-
-    .feature i {
-        font-size: 22px;
-        margin-right: 15px;
-        color: #ff7120d9;
-        min-width: 24px;
-    }
-
-    /* Footer */
-    .auth-footer {
-        position: absolute;
-        bottom: 40px;
-        left: 0;
-        right: 0;
-        text-align: center;
-    }
-
-    /* Form container */
-    .auth-form-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 60%;
-        padding: 40px;
-    }
-
-    .auth-form-wrapper {
-        width: 100%;
-        max-width: 400px;
-    }
-</style>
 <div class="otp-container">
     <div class="verification-icon">
         <i class="fas fa-envelope-open-text"></i>

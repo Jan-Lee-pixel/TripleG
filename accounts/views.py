@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.utils import timezone
 from datetime import timedelta
 from .forms import ClientRegisterForm, OTPForm, AdminRegisterForm, AdminLoginForm, AdminOTPForm
-from .models import OneTimePassword, AdminProfile, Profile
+from .models import OneTimePassword, AdminProfile, SiteManagerProfile, Profile
 from .utils import get_user_role, get_user_dashboard_url, get_appropriate_redirect
 @csrf_protect
 @never_cache
@@ -355,13 +355,26 @@ def admin_login_view(request):
                         return redirect(next_url)
                     else:
                         if admin_profile.approval_status == 'pending':
-                            messages.warning(request, "Your admin account is pending approval.")
+                            # Redirect to pending approval page for better UX
+                            messages.warning(request, 
+                                "Your admin account hasn't been approved yet. Please wait for administrator approval. "
+                                "You will receive an email notification once your account is approved.")
+                            return render(request, 'admin/pending_approval.html', {
+                                'user': user,
+                                'admin_profile': admin_profile
+                            })
                         elif admin_profile.approval_status == 'denied':
-                            messages.error(request, "Your admin account has been denied.")
+                            messages.error(request, 
+                                "Your admin account application has been denied. "
+                                "Please contact the system administrator for more information.")
                         elif admin_profile.approval_status == 'suspended':
-                            messages.error(request, "Your admin account has been suspended.")
+                            messages.error(request, 
+                                "Your admin account has been suspended. "
+                                "Please contact the system administrator to resolve this issue.")
                         else:
-                            messages.error(request, "Your admin account is not active.")
+                            messages.error(request, 
+                                "Your admin account is not active. "
+                                "Please contact the system administrator for assistance.")
                 else:
                     # Invalid password - increment failed attempts
                     admin_profile.failed_login_attempts += 1
@@ -513,43 +526,39 @@ def sitemanager_login_view(request):
             if auth_user is not None:
                 print(f"[DEBUG] Authentication successful for: {auth_user.username}")
                 
-                # Check if user has admin profile (site manager)
-                if hasattr(auth_user, 'adminprofile'):
-                    admin_profile = auth_user.adminprofile
-                    print(f"[DEBUG] Admin profile found - Role: {admin_profile.admin_role}, Status: {admin_profile.approval_status}")
+                # Check if user has site manager profile
+                if hasattr(auth_user, 'sitemanagerprofile'):
+                    sitemanager_profile = auth_user.sitemanagerprofile
+                    print(f"[DEBUG] Site manager profile found - Status: {sitemanager_profile.approval_status}")
                     
-                    # Check if it's a site manager and approved
-                    if admin_profile.admin_role == 'site_manager':
-                        if admin_profile.approval_status == 'approved':
-                            # Login successful
-                            login(request, auth_user)
-                            messages.success(request, f'Welcome back, {auth_user.get_full_name()}!')
-                            print(f"[DEBUG] Login successful, redirecting to dashboard")
-                            
-                            # Redirect to site manager dashboard
-                            from .utils import get_user_role
-                            user_role = get_user_role(auth_user)
-                            print(f"[DEBUG] User role detected: {user_role}")
-                            dashboard_url = get_user_dashboard_url(auth_user)
-                            print(f"[DEBUG] Dashboard URL: {dashboard_url}")
-                            next_url = request.GET.get('next', dashboard_url)
-                            print(f"[DEBUG] Final redirect URL: {next_url}")
-                            return redirect(next_url)
-                        elif admin_profile.approval_status == 'pending':
-                            print(f"[DEBUG] Account pending approval")
-                            messages.warning(request, 'Your account is still pending approval. Please wait for admin approval.')
-                            return redirect('accounts:sitemanager_pending_approval')
-                        elif admin_profile.approval_status == 'denied':
-                            print(f"[DEBUG] Account denied")
-                            messages.error(request, 'Your account has been denied access.')
-                        else:
-                            print(f"[DEBUG] Account suspended")
-                            messages.error(request, 'Your account is suspended.')
+                    # Check if site manager is approved
+                    if sitemanager_profile.approval_status == 'approved':
+                        # Login successful
+                        login(request, auth_user)
+                        messages.success(request, f'Welcome back, {auth_user.get_full_name()}!')
+                        print(f"[DEBUG] Login successful, redirecting to dashboard")
+                        
+                        # Redirect to site manager dashboard
+                        from .utils import get_user_role
+                        user_role = get_user_role(auth_user)
+                        print(f"[DEBUG] User role detected: {user_role}")
+                        dashboard_url = get_user_dashboard_url(auth_user)
+                        print(f"[DEBUG] Dashboard URL: {dashboard_url}")
+                        next_url = request.GET.get('next', dashboard_url)
+                        print(f"[DEBUG] Final redirect URL: {next_url}")
+                        return redirect(next_url)
+                    elif sitemanager_profile.approval_status == 'pending':
+                        print(f"[DEBUG] Account pending approval")
+                        messages.warning(request, 'Your account is still pending approval. Please wait for admin approval.')
+                        return redirect('accounts:sitemanager_pending_approval')
+                    elif sitemanager_profile.approval_status == 'denied':
+                        print(f"[DEBUG] Account denied")
+                        messages.error(request, 'Your account has been denied access.')
                     else:
-                        print(f"[DEBUG] Not a site manager - Role: {admin_profile.admin_role}")
-                        messages.error(request, 'Invalid credentials for site manager access.')
+                        print(f"[DEBUG] Account suspended")
+                        messages.error(request, 'Your account is suspended.')
                 else:
-                    print(f"[DEBUG] No admin profile found")
+                    print(f"[DEBUG] No site manager profile found")
                     messages.error(request, 'Invalid credentials for site manager access.')
             else:
                 print(f"[DEBUG] Authentication failed for user: {user.username}")
@@ -599,10 +608,9 @@ def sitemanager_register_view(request):
                 is_active=False  # Will be activated after OTP verification
             )
             
-            # Create AdminProfile for Site Manager
-            admin_profile = AdminProfile.objects.create(
+            # Create SiteManagerProfile for Site Manager
+            sitemanager_profile = SiteManagerProfile.objects.create(
                 user=user,
-                admin_role='site_manager',
                 approval_status='pending',
                 department='Site Management'
             )
@@ -715,7 +723,7 @@ def sitemanager_pending_approval(request):
 
 def sitemanager_logout_view(request):
     """Site Manager logout"""
-    if request.user.is_authenticated and hasattr(request.user, 'adminprofile'):
+    if request.user.is_authenticated and hasattr(request.user, 'sitemanagerprofile'):
         logout(request)
         messages.info(request, "You have been successfully logged out.")
     return redirect('accounts:sitemanager_login')

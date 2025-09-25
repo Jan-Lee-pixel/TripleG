@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.html import format_html
 from django.urls import reverse
-from .models import Profile, AdminProfile, OneTimePassword
+from .models import Profile, AdminProfile, SiteManagerProfile, OneTimePassword
 
 
 @admin.register(Profile)
@@ -47,8 +47,7 @@ class AdminProfileAdmin(admin.ModelAdmin):
     
     def approve_admins(self, request, queryset):
         from django.utils import timezone
-        from django.core.mail import send_mail
-        from django.conf import settings
+        from .utils import send_admin_approval_email
         
         approved_count = 0
         email_sent_count = 0
@@ -61,49 +60,15 @@ class AdminProfileAdmin(admin.ModelAdmin):
             admin_profile.save()
             approved_count += 1
             
-            # Send approval email
-            user = admin_profile.user
-            subject = 'Site Manager Account Approved - Triple G BuildHub'
-            message = f'''
-Hello {user.first_name},
-
-Great news! Your Site Manager account has been approved by our admin team.
-
-You can now log in to your account and start using Triple G BuildHub's site management features:
-- Create and manage site diaries
-- Collaborate with teams and clients
-- Access all construction project management tools
-
-Login URL: http://127.0.0.1:8000/accounts/sitemanager/login/
-
-Your login credentials:
-- Email: {user.email}
-- Password: [Use the password you created during registration]
-
-Welcome to Triple G BuildHub!
-
-Best regards,
-Triple G BuildHub Team
-            '''
-            
-            try:
-                send_mail(
-                    subject,
-                    message,
-                    settings.DEFAULT_FROM_EMAIL,
-                    [user.email],
-                    fail_silently=False,
-                )
+            # Send approval email using utility function
+            if send_admin_approval_email(admin_profile, request.user):
                 email_sent_count += 1
-            except Exception as e:
-                print(f"Failed to send approval email to {user.email}: {str(e)}")
         
         self.message_user(request, f'{approved_count} admin(s) approved successfully. {email_sent_count} notification email(s) sent.')
     approve_admins.short_description = "Approve selected admin accounts"
     
     def deny_admins(self, request, queryset):
-        from django.core.mail import send_mail
-        from django.conf import settings
+        from .utils import send_admin_denial_email
         
         denied_count = 0
         email_sent_count = 0
@@ -113,43 +78,121 @@ Triple G BuildHub Team
             admin_profile.save()
             denied_count += 1
             
-            # Send denial email
-            user = admin_profile.user
-            subject = 'Site Manager Account Application Update - Triple G BuildHub'
-            message = f'''
-Hello {user.first_name},
-
-Thank you for your interest in becoming a Site Manager with Triple G BuildHub.
-
-After reviewing your application, we are unable to approve your account at this time. This could be due to various reasons such as incomplete information or current capacity limitations.
-
-If you believe this is an error or would like to reapply in the future, please contact our support team.
-
-Thank you for your understanding.
-
-Best regards,
-Triple G BuildHub Team
-            '''
-            
-            try:
-                send_mail(
-                    subject,
-                    message,
-                    settings.DEFAULT_FROM_EMAIL,
-                    [user.email],
-                    fail_silently=False,
-                )
+            # Send denial email using utility function
+            if send_admin_denial_email(admin_profile):
                 email_sent_count += 1
-            except Exception as e:
-                print(f"Failed to send denial email to {user.email}: {str(e)}")
         
         self.message_user(request, f'{denied_count} admin(s) denied. {email_sent_count} notification email(s) sent.')
     deny_admins.short_description = "Deny selected admin accounts"
     
     def suspend_admins(self, request, queryset):
-        updated = queryset.update(approval_status='suspended')
-        self.message_user(request, f'{updated} admin(s) suspended.')
+        from .utils import send_admin_suspension_email
+        
+        suspended_count = 0
+        email_sent_count = 0
+        
+        for admin_profile in queryset:
+            admin_profile.approval_status = 'suspended'
+            admin_profile.save()
+            suspended_count += 1
+            
+            # Send suspension email using utility function
+            if send_admin_suspension_email(admin_profile):
+                email_sent_count += 1
+        
+        self.message_user(request, f'{suspended_count} admin(s) suspended. {email_sent_count} notification email(s) sent.')
     suspend_admins.short_description = "Suspend selected admin accounts"
+
+
+@admin.register(SiteManagerProfile)
+class SiteManagerProfileAdmin(admin.ModelAdmin):
+    list_display = (
+        'user', 'approval_status', 'department', 
+        'employee_id', 'failed_login_attempts', 'created_at'
+    )
+    list_filter = ('approval_status', 'department')
+    search_fields = ('user__username', 'user__email', 'employee_id', 'department')
+    readonly_fields = ('created_at', 'updated_at', 'last_login_ip', 'failed_login_attempts')
+    
+    fieldsets = (
+        ('User Information', {
+            'fields': ('user', 'department', 'employee_id')
+        }),
+        ('Approval Status', {
+            'fields': ('approval_status', 'approved_by', 'approved_at')
+        }),
+        ('Contact Information', {
+            'fields': ('phone', 'emergency_contact', 'hire_date', 'company_department')
+        }),
+        ('Security Information', {
+            'fields': ('last_login_ip', 'failed_login_attempts', 'account_locked_until'),
+            'classes': ('collapse',)
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    actions = ['approve_sitemanagers', 'deny_sitemanagers', 'suspend_sitemanagers']
+    
+    def approve_sitemanagers(self, request, queryset):
+        from django.utils import timezone
+        from .utils import send_admin_approval_email
+        
+        approved_count = 0
+        email_sent_count = 0
+        
+        for sitemanager_profile in queryset:
+            # Update approval status
+            sitemanager_profile.approval_status = 'approved'
+            sitemanager_profile.approved_by = request.user
+            sitemanager_profile.approved_at = timezone.now()
+            sitemanager_profile.save()
+            approved_count += 1
+            
+            # Send approval email using utility function
+            if send_admin_approval_email(sitemanager_profile, request.user):
+                email_sent_count += 1
+        
+        self.message_user(request, f'{approved_count} site manager(s) approved successfully. {email_sent_count} notification email(s) sent.')
+    approve_sitemanagers.short_description = "Approve selected site manager accounts"
+    
+    def deny_sitemanagers(self, request, queryset):
+        from .utils import send_admin_denial_email
+        
+        denied_count = 0
+        email_sent_count = 0
+        
+        for sitemanager_profile in queryset:
+            sitemanager_profile.approval_status = 'denied'
+            sitemanager_profile.save()
+            denied_count += 1
+            
+            # Send denial email using utility function
+            if send_admin_denial_email(sitemanager_profile):
+                email_sent_count += 1
+        
+        self.message_user(request, f'{denied_count} site manager(s) denied. {email_sent_count} notification email(s) sent.')
+    deny_sitemanagers.short_description = "Deny selected site manager accounts"
+    
+    def suspend_sitemanagers(self, request, queryset):
+        from .utils import send_admin_suspension_email
+        
+        suspended_count = 0
+        email_sent_count = 0
+        
+        for sitemanager_profile in queryset:
+            sitemanager_profile.approval_status = 'suspended'
+            sitemanager_profile.save()
+            suspended_count += 1
+            
+            # Send suspension email using utility function
+            if send_admin_suspension_email(sitemanager_profile):
+                email_sent_count += 1
+        
+        self.message_user(request, f'{suspended_count} site manager(s) suspended. {email_sent_count} notification email(s) sent.')
+    suspend_sitemanagers.short_description = "Suspend selected site manager accounts"
 
 
 @admin.register(OneTimePassword)
