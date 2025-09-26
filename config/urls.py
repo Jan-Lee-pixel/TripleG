@@ -29,6 +29,8 @@ urlpatterns = [
     path('diary/', include(('site_diary.urls', 'site'), namespace='site')),
     path('blog/', include(('blog.urls', 'blog'), namespace='blog')),
     path('chat/', include(('chatbot.urls', 'chatbot'), namespace='chatbot')),
+    # Admin side URLs
+    path('admin-panel/', include(('admin_side.urls', 'admin_side'), namespace='admin_side')),
     # Direct admin URLs for easier access
     path('adminside/clientproject/', site_diary_views.adminclientproject, name='direct_adminclientproject'),
     path('adminside/diary/', site_diary_views.admindiary, name='direct_admindiary'),

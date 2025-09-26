@@ -95,8 +95,8 @@ class UtilityFunctionsTests(RoleBasedAccessControlTests):
     def test_get_user_dashboard_url(self):
         """Test dashboard URL generation for different roles"""
         self.assertEqual(get_user_dashboard_url(self.superadmin), '/admin/')
-        self.assertEqual(get_user_dashboard_url(self.admin_user), 'portfolio:projectmanagement')
-        self.assertEqual(get_user_dashboard_url(self.site_manager_user), 'site:dashboard')
+        self.assertEqual(get_user_dashboard_url(self.admin_user), 'admin_side:admin_home')
+        self.assertEqual(get_user_dashboard_url(self.site_manager_user), 'admin_side:admin_home')
         self.assertEqual(get_user_dashboard_url(self.public_user), '/user/')
     
     def test_can_access_path_permissions(self):

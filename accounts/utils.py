@@ -218,8 +218,8 @@ def get_user_dashboard_url(user):
     
     dashboard_urls = {
         'superadmin': '/admin/',
-        'admin': 'portfolio:projectmanagement',
-        'site_manager': 'site:dashboard',
+        'admin': 'admin_side:admin_home',
+        'site_manager': 'admin_side:admin_home',
         'public': 'core:usersettings',  # Client dashboard - use existing URL
         'anonymous': 'accounts:client_login'
     }
